@@ -47,10 +47,6 @@ struct ContentView: View {
                         pressureView
                     }
                     
-                    Tab("Progress", systemImage: "switch.programmable", value: Tabs.Progress) {
-                        InspectionProgressView()
-                            .padding()
-                    }
                     
                     Tab("ToF", systemImage: "pencil.and.ruler", value: Tabs.ToF) {
                         ToFView()

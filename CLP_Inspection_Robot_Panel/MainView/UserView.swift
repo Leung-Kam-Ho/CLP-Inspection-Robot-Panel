@@ -57,7 +57,7 @@ struct UserView: View {
                     .padding()
                     .padding(.horizontal)
                     .tint(.primary)
-                    .background(RoundedRectangle(cornerRadius: 33.0).fill(inProgress ? .red : .green))
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : .green))
             }
             Spacer()
             Button(action:{
@@ -67,7 +67,7 @@ struct UserView: View {
                     .padding()
                     .padding(.horizontal)
                     .tint(.primary)
-                    .background(RoundedRectangle(cornerRadius: 33.0).fill(inProgress ? .gray : .orange))
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .gray : .orange))
             }
             .disabled(inProgress)
             Spacer()
@@ -78,7 +78,7 @@ struct UserView: View {
         
         .frame(maxWidth: .infinity)
         .padding()
-        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial))
+        .background(RoundedRectangle(cornerRadius: 33.0).fill(.ultraThinMaterial))
         .padding()
         
         HStack{

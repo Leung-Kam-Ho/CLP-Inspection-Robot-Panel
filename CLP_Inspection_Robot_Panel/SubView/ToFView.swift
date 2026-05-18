@@ -37,6 +37,7 @@ struct ToFView: View {
                             .padding()
                             .font(.title)
                             .contentTransition(.numericText(countsDown: true))
+                            .foregroundStyle(value == 153 || value == 0 ? .red : Constants.offWhite)
                             .background(RoundedRectangle(cornerRadius: 33.0).fill(.ultraThickMaterial))
                     }
                 }

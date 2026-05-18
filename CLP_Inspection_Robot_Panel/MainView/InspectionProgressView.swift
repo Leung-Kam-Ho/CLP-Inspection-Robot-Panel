@@ -51,42 +51,15 @@ struct InspectionSlotCardView: View {
                     Image(systemName: "\(slot.slot_id).circle.fill")
                 }
                 Spacer()
-                Image(systemName: slot.EL_CID_Progress != 1.0 ? "xmark.circle.fill" : "checkmark.circle.fill")
-                    .foregroundStyle(slot.EL_CID_Progress != 1.0 ? .red : .green)
-                Spacer()
-                if current_slot{
-                    Button(action:{
-                        
-                    }){
-                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
-                    }
-                }else{
-                    Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
-                        .foregroundStyle(.clear)
-                }
+                Text("Progress")
+                    .foregroundStyle(Constants.notBlack)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
                 
             }.padding()
-            Text(String(format: "%03d",slot.EL_CID_Progress * 100) + "%")
-                .lineLimit(1)
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical)
-                .contentTransition(.numericText(countsDown: true))
-                .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear, lineWidth: 5).fill(slot.EL_CID_Progress != 1.0 ? .gray : .green))
-            VStack{
-                if let result = slot.Knocker_result{
-                    Text(String(format: "%03d", result * 100) + "%")
-                        .lineLimit(1)
-                        .foregroundStyle(.white)
-                }else{
-                    Text("-")
-                        .foregroundStyle(.white)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
-            .contentTransition(.numericText(countsDown: true))
-            .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear,lineWidth: 5).fill(slot.Knocker_result == nil ? .gray : (slot.Knocker_result! >= 0.6 ? .green : .gray )))
+            
+            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
+            TestProgressBar(label : "EL-CID", value : slot.EL_CID_Progress, color: .green)
         }
         .id(slot.slot_id)
         .padding()
@@ -97,7 +70,34 @@ struct InspectionSlotCardView: View {
     }
 }
 
+extension InspectionSlotCardView{
+    struct TestProgressBar: View {
+        var label : String
+        var value : Float?
+        var color : Color
+        var body: some View {
+            
+            HStack{
+                Text(label)
+                    .foregroundStyle(Constants.notBlack)
+                    .frame(width: 100)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
+                                    Text(String(format: "%.1f",(value ?? 0.0) * 100) + "%" )
+                    .lineLimit(1)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical)
+                    .contentTransition(.numericText(countsDown: true))
+                    .background(RoundedRectangle(cornerRadius: 18.0).fill(value != 1.0 ? .gray : color))
+            }
+        }
+        
+    }
+}
+
 extension InspectionProgressView{
+    
     struct Inspection_Slot_Progress : Codable, Hashable{
         let slot_id : Int
         let EL_CID_Progress : Float  //percentage of complete
