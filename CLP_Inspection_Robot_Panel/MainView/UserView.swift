@@ -49,40 +49,69 @@ struct UserView: View {
         }.buttonStyle(.plain).opacity(launchPlatformStatus.status.connected ? 1 : 0.5)
         let autoSection =
         HStack {
+            let inProgress = (autoStatus.status.mode != "Manual")
             Button(action:{
                 
             }){
-                let inProgress = (autoStatus.status.mode != "Manual")
                 Label( "\(inProgress ? "Stop" : "Start")",systemImage: inProgress ? "stop.fill" : "play.fill")
                     .padding()
                     .padding(.horizontal)
                     .tint(.primary)
                     .background(RoundedRectangle(cornerRadius: 33.0).fill(inProgress ? .red : .green))
             }
-            
             Spacer()
-            
+            Button(action:{
+                
+            }){
+                Label("Next", systemImage: "play.fill")
+                    .padding()
+                    .padding(.horizontal)
+                    .tint(.primary)
+                    .background(RoundedRectangle(cornerRadius: 33.0).fill(inProgress ? .gray : .orange))
+            }
+            .disabled(inProgress)
+            Spacer()
             Text(autoStatus.status.mode)
                 .lineLimit(1)
-                .font(.title)
-            Spacer()
+                .padding()
         }
+        
+        .frame(maxWidth: .infinity)
         .padding()
-        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThickMaterial))
+        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial))
         .padding()
         
-        VStack{
-            TabView(content: {
-                launch_platform_btn
-                pressure_btn
-            })
+        HStack{
+            VStack{
+                Image(systemName: "lightbulb.fill")
+                    .foregroundStyle(Constants.notBlack)
+//                    .padding()
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 17).fill(Constants.offWhite))
+                LEDControlView()
+                    .frame(maxHeight: 400)
+                Spacer()
+            }
+            .frame(maxHeight:.infinity)
             .padding()
+            .background(RoundedRectangle(cornerRadius: 17.0)
+                .fill(.ultraThickMaterial))
+            .padding()
+            .frame(width:120)
             
-            
-            autoSection
-            
+            VStack{
+                Group{
+                    launch_platform_btn
+                    pressure_btn
+                }
+    //            .frame(maxHeight:420)
+                .padding()
+                InspectionSlotCardView(slot: InspectionProgressView.Inspection_Slot_Progress(slot_id: 1, EL_CID_Progress: 0, Knocker_result: 0), current_slot: true)
+
+                autoSection
+            }
         }
-        .frame(width: 500)
+        .frame(width: 650)
     }
 }
 

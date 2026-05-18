@@ -20,8 +20,8 @@ struct CLP_Inspection_Robot_PanelApp: App {
     @StateObject var fbgStatus = FBGStatusObject()
 
     private let FullMinSize = CGSize(width: 2000, height: 1000)
-    private let contentMinSize = CGSize(width: 1300, height: 1000)
-    private let userViewContentMinSize = CGSize(width: 500, height: 1000)
+    private let contentMinSize = CGSize(width: 1300, height: 1200)
+    private let userViewContentMinSize = CGSize(width: 800, height: 1200)
     private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
     @Environment(\.openWindow) private var openWindow
     

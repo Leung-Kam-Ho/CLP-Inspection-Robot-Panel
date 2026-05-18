@@ -29,59 +29,71 @@ struct InspectionProgressView: View {
                     LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(data, id: \.self) { slot in
                             let current_slot = slot_now == slot.slot_id
-                            VStack{
-                                HStack{
-                                    Image(systemName: "\(slot.slot_id).circle.fill")
-                                    Spacer()
-                                    Image(systemName: slot.EL_CID_Progress != 1.0 ? "xmark.circle.fill" : "checkmark.circle.fill")
-                                        .foregroundStyle(slot.EL_CID_Progress != 1.0 ? .red : .green)
-                                    Spacer()
-                                    if current_slot{
-                                        Button(action:{
-                                            
-                                        }){
-                                            Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
-                                        }
-                                    }else{
-                                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
-                                            .foregroundStyle(.clear)
-                                    }
-                                    
-                                }.padding()
-                                Text(String(format: "%03d",slot.EL_CID_Progress * 100) + "%")
-                                    .lineLimit(1)
-                                    .foregroundStyle(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical)
-                                    .contentTransition(.numericText(countsDown: true))
-                                    .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear, lineWidth: 5).fill(slot.EL_CID_Progress != 1.0 ? .red : .green))
-                                VStack{
-                                    if let result = slot.Knocker_result{
-                                        Text(String(format: "%03d", result * 100) + "%")
-                                            .lineLimit(1)
-                                            .foregroundStyle(.white)
-                                    }else{
-                                        Text("-")
-                                            .foregroundStyle(.white)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical)
-                                .contentTransition(.numericText(countsDown: true))
-                                .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear,lineWidth: 5).fill(slot.Knocker_result == nil ? .gray : (slot.Knocker_result! >= 0.6 ? .green : .red )))
-                            }
-                            .id(slot.slot_id)
-                            .padding()
-                            .font(.title)
-                            .contentTransition(.numericText(countsDown: true))
-                            .background(RoundedRectangle(cornerRadius: 33.0).stroke( current_slot ? .white : .clear, lineWidth: 5).fill(.ultraThickMaterial))
-                            .padding()
+                            InspectionSlotCardView(slot: slot, current_slot: current_slot)
                         }
                     }
                 }
             }
         }.padding()
             .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial).stroke(.white))
+    }
+}
+
+struct InspectionSlotCardView: View {
+    let slot: InspectionProgressView.Inspection_Slot_Progress
+    let current_slot: Bool
+    
+    var body: some View {
+        VStack{
+            HStack{
+                HStack{
+                    Text("Slot")
+                    Image(systemName: "\(slot.slot_id).circle.fill")
+                }
+                Spacer()
+                Image(systemName: slot.EL_CID_Progress != 1.0 ? "xmark.circle.fill" : "checkmark.circle.fill")
+                    .foregroundStyle(slot.EL_CID_Progress != 1.0 ? .red : .green)
+                Spacer()
+                if current_slot{
+                    Button(action:{
+                        
+                    }){
+                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
+                    }
+                }else{
+                    Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill")
+                        .foregroundStyle(.clear)
+                }
+                
+            }.padding()
+            Text(String(format: "%03d",slot.EL_CID_Progress * 100) + "%")
+                .lineLimit(1)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical)
+                .contentTransition(.numericText(countsDown: true))
+                .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear, lineWidth: 5).fill(slot.EL_CID_Progress != 1.0 ? .gray : .green))
+            VStack{
+                if let result = slot.Knocker_result{
+                    Text(String(format: "%03d", result * 100) + "%")
+                        .lineLimit(1)
+                        .foregroundStyle(.white)
+                }else{
+                    Text("-")
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
+            .contentTransition(.numericText(countsDown: true))
+            .background(RoundedRectangle(cornerRadius: 18.0).stroke(current_slot ? .white : .clear,lineWidth: 5).fill(slot.Knocker_result == nil ? .gray : (slot.Knocker_result! >= 0.6 ? .green : .gray )))
+        }
+        .id(slot.slot_id)
+        .padding()
+        .font(.title)
+        .contentTransition(.numericText(countsDown: true))
+        .background(RoundedRectangle(cornerRadius: 33.0).stroke( current_slot ? .white : .clear, lineWidth: 5).fill(.ultraThickMaterial))
+        .padding()
     }
 }
 

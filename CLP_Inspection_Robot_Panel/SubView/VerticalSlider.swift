@@ -20,6 +20,7 @@ struct VerticalSlider: View {
     // So remember where the slider value is on first touch, then just adjust slider value relative
     // to that value
     @State private var startingValue = 0.0
+    var sliderColor = Color(red: 221/255, green: 221/255, blue: 221/255)
     
     // For handling swipe up and down to adjust volume between 0...1
     func gesture1(geometry: GeometryProxy) -> some Gesture {
@@ -55,7 +56,7 @@ struct VerticalSlider: View {
             ZStack(alignment: .bottom) {
                 Color(red: 24/255, green: 24/255, blue: 24/255)
                     .frame(width: geometry.size.width, height: geometry.size.height)
-                Color(red: 221/255, green: 221/255, blue: 221/255)
+                sliderColor
                     .frame(width: geometry.size.width, height: geometry.size.height * CGFloat(self.value))
                     .cornerRadius(0)    // must do this, otherwise when the slider gesture reach max the top has rounded corner
                 if let rV = self.referenceValue{

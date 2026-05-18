@@ -29,8 +29,8 @@ struct LEDControlView: View {
                     return Image(systemName: "lightbulb.fill")
                 }, text: { _ in
                     let value = self.viewModel.ledValue * self.viewModel.led_max
-                    return Text("\(Int(value))%")
-                })
+                    return Text("\(Int(value))")
+                },sliderColor:.orange)
                 .multilineTextAlignment(.center)
             }
         }
