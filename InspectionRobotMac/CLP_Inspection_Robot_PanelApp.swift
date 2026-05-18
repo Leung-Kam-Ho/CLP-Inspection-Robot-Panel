@@ -104,16 +104,17 @@ struct CLP_Inspection_Robot_PanelApp: App {
             .environmentObject(digitalValveStatus)
             .environmentObject(fbgStatus)
         }
+        .defaultSize(contentMinSize)
         
-        WindowGroup("User-View", id:"user-view") {
-            UserView()
-                .environmentObject(digitalValveStatus)
-                .environmentObject(robotStatus)
-                .environmentObject(launchPlatformStatus)
-                .environmentObject(automationStatus)
-                .environmentObject(settings)
-                .font(.title2)
-                .bold()
-        }
+//        WindowGroup("User-View", id:"user-view") {
+//            UserView()
+//                .environmentObject(digitalValveStatus)
+//                .environmentObject(robotStatus)
+//                .environmentObject(launchPlatformStatus)
+//                .environmentObject(automationStatus)
+//                .environmentObject(settings)
+//                .font(.title2)
+//                .bold()
+//        }
     }
 }
