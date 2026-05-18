@@ -18,17 +18,23 @@ struct CLP_Inspection_Robot_PanelApp: App {
     @StateObject var elCidStatus = ElCidStatusObject()
     @StateObject var digitalValveStatus = DigitalValveStatusObject()
     @StateObject var fbgStatus = FBGStatusObject()
-    
+
+    private let FullMinSize = CGSize(width: 2000, height: 1000)
     private let contentMinSize = CGSize(width: 1300, height: 1000)
+    private let userViewContentMinSize = CGSize(width: 500, height: 1000)
+    private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
+    @Environment(\.openWindow) private var openWindow
     
     var body: some Scene {
-
-        WindowGroup {
-            GeometryReader{ proxy in
-                let fullscreen = proxy.size.width > contentMinSize.width && proxy.size.height > contentMinSize.height
-                    HStack {
-                        ContentView(disable_robot : fullscreen)
-                        if fullscreen{
+        WindowGroup(id: "main") {
+            GeometryReader { proxy in
+                let isFullScreen = proxy.size.width > FullMinSize.width && proxy.size.height > FullMinSize.height
+                let smallerThenMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
+                
+                HStack {
+                    if !smallerThenMinSize{
+                        ContentView(disable_robot: isFullScreen)
+                        if isFullScreen {
                             ControlView()
                                 .clipShape(RoundedRectangle(cornerRadius: 33))
                                 .padding()
@@ -39,41 +45,56 @@ struct CLP_Inspection_Robot_PanelApp: App {
                                 )
                                 .padding()
                         }
+                    }else{
+                        HStack{
+                            UserView()
+                            Spacer()
+                            
+                        }
+                        
                     }
-                
-                    .scrollContentBackground(.hidden)
-                    .bold()
-                    .preferredColorScheme(.dark)
-
-                    .monospacedDigit()
-                
+                    
+                    
+                    
+                    
+                }
+                .scrollContentBackground(.hidden)
+                .bold()
+                .preferredColorScheme(.dark)
+                .monospacedDigit()
+            }
+            .background(){
+                Button(""){
+                    logger.info("Fullscreen")
+                    openWindow(id: "user-view")
+//                    contentMinSize = CGSize(width: 800, height: 1000)
+                }.keyboardShortcut(.return, modifiers: .command)
             }
             .background(Image("Watermark"))
-            .onReceive(elCidStatus.timer, perform: { _ in
-                Logger().info("elCid Fetching Status")
+            .onReceive(elCidStatus.timer) { _ in
+                logger.info("elCid Fetching Status")
                 elCidStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
-            .onReceive(launchPlatformStatus.timer, perform: { _ in
-                Logger().info("launchplatform Fetching Status")
+            }
+            .onReceive(launchPlatformStatus.timer) { _ in
+                logger.info("launchplatform Fetching Status")
                 launchPlatformStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            })
-            .onReceive(automationStatus.timer, perform: { _ in
-                Logger().info("Auto Fetching Status")
+            }
+            .onReceive(automationStatus.timer) { _ in
+                logger.info("Auto Fetching Status")
                 automationStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            })
-            .onReceive(robotStatus.timer, perform: { _ in
-                Logger().info("robot Fetching Status")
+            }
+            .onReceive(robotStatus.timer) { _ in
+                logger.info("robot Fetching Status")
                 robotStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            })
-            .onReceive(digitalValveStatus.timer, perform: { _ in
-                Logger().info("digital valve Fetching Status")
+            }
+            .onReceive(digitalValveStatus.timer) { _ in
+                logger.info("digital valve Fetching Status")
                 digitalValveStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            })
-            .onReceive(fbgStatus.timer, perform: { _ in
-                Logger().info("FBG Fetching Status")
+            }
+            .onReceive(fbgStatus.timer) { _ in
+                logger.info("FBG Fetching Status")
                 fbgStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            })
+            }
             .font(.title2)
             .environmentObject(settings)
             .environmentObject(robotStatus)
@@ -83,7 +104,16 @@ struct CLP_Inspection_Robot_PanelApp: App {
             .environmentObject(digitalValveStatus)
             .environmentObject(fbgStatus)
         }
-        .defaultSize(contentMinSize)
+        
+        WindowGroup("User-View", id:"user-view") {
+            UserView()
+                .environmentObject(digitalValveStatus)
+                .environmentObject(robotStatus)
+                .environmentObject(launchPlatformStatus)
+                .environmentObject(automationStatus)
+                .environmentObject(settings)
+                .font(.title2)
+                .bold()
+        }
     }
-
 }

@@ -46,6 +46,7 @@
 				MainView/InspectionProgressView.swift,
 				MainView/LaunchPlatformView.swift,
 				MainView/PressureView.swift,
+				MainView/UserView.swift,
 				SaveFile.swift,
 				SharedClass/NetworkManager.swift,
 				SubView/AutoControlView.swift,
@@ -60,11 +61,18 @@
 			);
 			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */;
 		};
+		C06667372FBB19E40017A9BA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		23405EA32C42FC9B00A7281D /* CLP_Inspection_Robot_Panel */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (23DC2CB52CCF42E400EB2CFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CLP_Inspection_Robot_Panel; sourceTree = "<group>"; };
-		23DC2C9A2CCF42B700EB2CFF /* InspectionRobotMac */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = InspectionRobotMac; sourceTree = "<group>"; };
+		23DC2C9A2CCF42B700EB2CFF /* InspectionRobotMac */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C06667372FBB19E40017A9BA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = InspectionRobotMac; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -455,6 +463,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InspectionRobotMac/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -494,6 +503,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InspectionRobotMac/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;

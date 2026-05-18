@@ -29,9 +29,9 @@ struct ContentView: View {
                         autoView
                     }
                     
-                    Tab("Camera", systemImage: "camera.fill", value: Tabs.Camera) {
-                        cameraView
-                    }
+//                    Tab("Camera", systemImage: "camera.fill", value: Tabs.Camera) {
+//                        cameraView
+//                    }
                     if !disable_robot{
                         Tab("Robot", systemImage: "macstudio.fill", value: Tabs.Robot) {
                             controlView(compact: !bigEnough)

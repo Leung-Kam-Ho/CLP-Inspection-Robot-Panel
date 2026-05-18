@@ -7,7 +7,5 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
-	<key>NSAppTransportSecurity</key>
-	<dict/>
 </dict>
 </plist>
