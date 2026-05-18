@@ -3,6 +3,7 @@
 The CLP Inspection Robot Panel is a software application designed to control and monitor inspection robots used in the CLP (China Light & Power). This repository contains all the necessary code and documentation to set up and use the panel.
 
 ![CLP Inspection Robot Panel](media/Overview_RViz.png)
+
 <img width="1470" height="923" alt="Screenshot 2026-05-08 at 2 46 32 PM" src="https://github.com/user-attachments/assets/081e9f6b-33f4-4046-97a7-ea4bfebe4a54" />
 
 ![CLP Inspection Robot Panel](media/Overview_1.png)
