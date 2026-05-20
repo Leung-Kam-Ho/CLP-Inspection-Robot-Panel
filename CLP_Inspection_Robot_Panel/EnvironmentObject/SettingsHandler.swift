@@ -17,6 +17,7 @@ class SettingsHandler : ObservableObject {
     @AppStorage("cameraIP") var cam_ip : String = "localhost"
     @AppStorage("cameraPort") var cam_port : Int = 4000
     @AppStorage("updateRate") var updateRate : Double = 1.0
+    @AppStorage("forceUserView") var forceUserView : Bool = false
 
     init() {
 

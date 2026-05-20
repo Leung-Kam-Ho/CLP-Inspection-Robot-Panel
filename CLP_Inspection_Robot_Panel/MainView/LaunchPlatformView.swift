@@ -53,22 +53,10 @@ extension LaunchPlatformView {
         Image("LaunchPlatform")
             .resizable()
             .padding()
-            .tint(.primary)
+//            .tint(.primary)
             .aspectRatio(contentMode: .fit)
             .rotationEffect(.degrees(Double(launchPlatformStatus.status.angle)))
-            .overlay(alignment: .center) {
-                ZStack {
-                    Image(systemName: "circle.fill")
-                        .font(.system(size: enabled && !compact ? 400 : 150))
-                        .foregroundStyle(.ultraThickMaterial)
-                    
-                    Button(action: {
-                        show_slot.toggle()
-                    }) {
-                        slotOrAngleDisplay
-                    }
-                }
-            }
+            
     }
     
     private var slotOrAngleDisplay: some View {
@@ -86,21 +74,24 @@ extension LaunchPlatformView {
                     .foregroundStyle(Constants.offWhite)
                     .font(enabled && !compact ? .title : .caption)
                 Text(String(format: "%02d", Int(slot)))
-                    .tint(.primary)
+                    .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
-                    .font(.system(size: enabled && !compact ? 200 : 70))
+                    .font(.system(size: enabled && !compact ? 200 : 100))
             } else {
                 Text("Angle")
+                    .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
-                    .font(enabled && !compact ? .title : .caption)
+                    
                 Text(enabled ? String(format: "%03d", Int(self.viewModel.previewLP_angle)) : String(format: "%03d", Int(launchPlatformStatus.status.angle)))
-                    .tint(.primary)
+                    .font(.system(size: enabled && !compact ? 180 : 100))
+                    .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
-                    .font(.system(size: enabled && !compact ? 180 : 50))
+                    
                 
                 Text(String(format: "%02d", Int(fractionalPart * 100)))
+                    .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
-                    .font(enabled && !compact ? .title : .caption)
+                    
             }
         }
     }
@@ -115,6 +106,19 @@ extension LaunchPlatformView {
                     .padding()
                     .overlay {
                         dragOverlayControls(length: length)
+                    }
+                    .overlay(alignment: .center) {
+                        ZStack {
+        //                    Image(systemName: "circle.fill")
+        //                        .font(.system(size: enabled && !compact ? 400 : 150))
+        //                        .foregroundStyle(.ultraThickMaterial)
+                            
+                            Button(action: {
+                                show_slot.toggle()
+                            }) {
+                                slotOrAngleDisplay
+                            }.buttonStyle(.plain)
+                        }
                     }
                 Spacer()
             }
@@ -162,6 +166,15 @@ extension LaunchPlatformView {
         VStack {
             Spacer()
             launchPlatformImage
+                .overlay(alignment: .center) {
+                    ZStack {
+                        Button(action: {
+                            show_slot.toggle()
+                        }) {
+                            slotOrAngleDisplay
+                        }.buttonStyle(.plain)
+                    }
+                }
             Spacer()
             HStack {
                 ForEach(1...4, id: \.self) { idx in

@@ -8,36 +8,95 @@
 import SwiftUI
 
 struct InspectionProgressView: View {
-    @EnvironmentObject var settings : SettingsHandler
-    @State var viewModel = ViewModel()
-    let columns = [
-        GridItem(.adaptive(minimum: 190,maximum: 500))
-    ]
+    @State private var tileValues: [Int] = Array(repeating: 0, count: 32)
+    @State private var hoveredIndex: Int? = nil
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 8)
+
+    func color(for value: Int) -> Color {
+        if value == 0{
+            return .gray
+        }
+        else if value < 700 {
+            return .red
+        } else if value < 750 {
+            return .yellow
+        } else {
+            return .green
+        }
+    }
+
+    func opacityRatio(for value: Int) -> Double {
+        // Map 650-800 to 1.0 to 0.5
+        if value == 0 {
+            return 1.0
+        }
+        let minValue = 650.0
+        let maxValue = 800.0
+        let clampedValue = max(min(Double(value), maxValue), minValue)
+        return 1.0 - (clampedValue - minValue) / (maxValue - minValue) * 0.8
+    }
+
+    func randomizeValues() {
+        for i in 0..<tileValues.count {
+            tileValues[i] = Int.random(in: 650...800)
+        }
+    }
+
     var body: some View {
-        let data = viewModel.progress
-        let slot_now = 0
-        VStack{
-            Label("Progress", systemImage: "chart.bar.yaxis")
-                .padding()
-                .padding(.vertical)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(Constants.notBlack)
-                .background(RoundedRectangle(cornerRadius: 33.0).fill(Constants.offWhite))
-                
-            ScrollViewReader{ proxy in
-                ScrollView(showsIndicators: false) {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(data, id: \.self) { slot in
-                            let current_slot = slot_now == slot.slot_id
-                            InspectionSlotCardView(slot: slot, current_slot: current_slot)
-                        }
+        Button(action:{
+            withAnimation(.easeInOut(duration: 0.5)) {
+                randomizeValues()
+            }
+        }){
+            GroupBox("Wedge HLD"){
+                LazyVGrid(columns: columns, spacing: 6) {
+                    ForEach(0..<32, id: \.self) { index in
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(color(for: tileValues[index]))
+                            .opacity(opacityRatio(for: tileValues[index]))
+                            .aspectRatio(1, contentMode: .fit)
+                            .overlay {
+                                if hoveredIndex == index {
+                                    Text(String(format: "%03d", tileValues[index]))
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                        .padding(4)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(4)
+                                        .shadow(radius: 2)
+                                        // To prevent it from being completely clipped if it's too big, 
+                                        // we can allow it to layout outside slightly, though overlay is bounded
+                                        .fixedSize()
+                                }
+                            }
+                            .onHover { isHovering in
+                                withAnimation(.easeInOut(duration: 0.1)) {
+                                    if isHovering {
+                                        hoveredIndex = index
+                                    } else if hoveredIndex == index {
+                                        hoveredIndex = nil
+                                    }
+                                }
+                            }
+                            .help(String(format: "%.1f", tileValues[index]))
                     }
                 }
+//                .padding()
+                .frame(height: 200)
             }
-        }.padding()
-            .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial).stroke(.white))
+            .clipShape(.rect(cornerRadius: 33))
+            
+            
+        }
+        .buttonStyle(.plain)
+        .onAppear {
+//            randomizeValues()
+        }
+        
     }
 }
+
+
 
 struct InspectionSlotCardView: View {
     let slot: InspectionProgressView.Inspection_Slot_Progress
@@ -51,21 +110,26 @@ struct InspectionSlotCardView: View {
                     Image(systemName: "\(slot.slot_id).circle.fill")
                 }
                 Spacer()
-                Text("Progress")
-                    .foregroundStyle(Constants.notBlack)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
+//                Text("Progress")
+//                    .foregroundStyle(Constants.notBlack)
+////                    .padding()
+//                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
                 
-            }.padding()
+            }
+            .padding(.horizontal)
             
-            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
             TestProgressBar(label : "EL-CID", value : slot.EL_CID_Progress, color: .green)
+//            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
+            InspectionProgressView()
         }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 33.0)
+                .fill(.ultraThickMaterial))
         .id(slot.slot_id)
         .padding()
         .font(.title)
         .contentTransition(.numericText(countsDown: true))
-        .background(RoundedRectangle(cornerRadius: 33.0).stroke( current_slot ? .white : .clear, lineWidth: 5).fill(.ultraThickMaterial))
+        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial))
         .padding()
     }
 }
@@ -77,20 +141,21 @@ extension InspectionSlotCardView{
         var color : Color
         var body: some View {
             
-            HStack{
-                Text(label)
-                    .foregroundStyle(Constants.notBlack)
-                    .frame(width: 100)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
-                                    Text(String(format: "%.1f",(value ?? 0.0) * 100) + "%" )
+            GroupBox(label){
+//                Text(label)
+//                    .foregroundStyle(Constants.notBlack)
+//                    .frame(width: 100)
+//                    .padding()
+//                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
+                Text(String(format: "%.1f",(value ?? 0.0) * 100) + "%" )
+                    .font(.title2)
                     .lineLimit(1)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
                     .contentTransition(.numericText(countsDown: true))
                     .background(RoundedRectangle(cornerRadius: 18.0).fill(value != 1.0 ? .gray : color))
-            }
+            }.clipShape(.rect(cornerRadius: 33))
         }
         
     }

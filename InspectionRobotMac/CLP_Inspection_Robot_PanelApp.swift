@@ -23,16 +23,19 @@ struct CLP_Inspection_Robot_PanelApp: App {
     private let contentMinSize = CGSize(width: 1300, height: 1200)
     private let userViewContentMinSize = CGSize(width: 800, height: 1200)
     private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
-    @Environment(\.openWindow) private var openWindow
+    
+    
     
     var body: some Scene {
         WindowGroup(id: "main") {
+            
             GeometryReader { proxy in
+                
                 let isFullScreen = proxy.size.width > FullMinSize.width && proxy.size.height > FullMinSize.height
                 let smallerThenMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
                 
                 HStack {
-                    if !smallerThenMinSize{
+                    if !smallerThenMinSize && !settings.forceUserView{
                         ContentView(disable_robot: isFullScreen)
                         if isFullScreen {
                             ControlView()
@@ -56,7 +59,6 @@ struct CLP_Inspection_Robot_PanelApp: App {
                     
                     
                     
-                    
                 }
                 .scrollContentBackground(.hidden)
                 .bold()
@@ -65,9 +67,8 @@ struct CLP_Inspection_Robot_PanelApp: App {
             }
             .background(){
                 Button(""){
-                    logger.info("Fullscreen")
-                    openWindow(id: "user-view")
-//                    contentMinSize = CGSize(width: 800, height: 1000)
+                    logger.info("UserView")
+                    settings.forceUserView.toggle()
                 }.keyboardShortcut(.return, modifiers: .command)
             }
             .background(Image("Watermark"))
