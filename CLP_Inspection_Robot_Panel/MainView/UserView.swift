@@ -94,45 +94,55 @@ struct UserView: View {
         .padding()
         
         HStack{
-            VStack{
-                Image(systemName: "lightbulb.fill")
-                    .foregroundStyle(Constants.notBlack)
-//                    .padding()
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 17).fill(Constants.offWhite))
-                LEDControlView()
-                    .frame(maxHeight: 400)
-                Spacer()
-                AutoStageView(totaleStage: 6, currentStage: 1)
-            }
-            .frame(maxHeight:.infinity)
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 17.0)
-                .fill(.ultraThickMaterial))
-            .padding()
-            .frame(width:120)
-            
-            VStack{
-                TabView{
-                    launch_platform_btn
-                    pressure_btn
-                    auto_btn
+            HStack{
+                VStack{
+                    Image(systemName: "lightbulb.fill")
+                        .foregroundStyle(Constants.notBlack)
+    //                    .padding()
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 17).fill(Constants.offWhite))
+                    LEDControlView()
+                        .frame(maxHeight: 400)
+                    Spacer()
+                    AutoStageView(totaleStage: 6, currentStage: 1)
                 }
-                .tabViewStyle(.page)
+                .frame(maxHeight:.infinity)
                 .padding()
+                .background(RoundedRectangle(cornerRadius: 17.0)
+                    .fill(.ultraThickMaterial))
+                .padding()
+                .frame(width:120)
                 
-                // tab view for inspection progress, total 30 slots, each slot has its own progress view, and can be selected to show more details
-                TabView(selection: $selected_slot){     
-                    ForEach(0..<30) { index in
-                        let slot = InspectionProgressView.Inspection_Slot_Progress(slot_id: index + 1, EL_CID_Progress: 0.0, Knocker_result: 0.0)
-                        InspectionSlotCardView(slot: slot, current_slot: index + 1 == selected_slot)
+                VStack{
+                    TabView{
+                        launch_platform_btn
+                        pressure_btn
+                        auto_btn
                     }
+                    .frame(height: 450)
+                    .tabViewStyle(.page)
+                    .padding()
+                    
+                    // tab view for inspection progress, total 30 slots, each slot has its own progress view, and can be selected to show more details
+                    TabView(selection: $selected_slot){
+                        ForEach(0..<30) { index in
+                            let slot = InspectionProgressView.Inspection_Slot_Progress(slot_id: index + 1, EL_CID_Progress: 0.0, Knocker_result: 0.0)
+                            InspectionSlotCardView(slot: slot, current_slot: index + 1 == selected_slot)
+                        }
+                    }
+                    .tabViewStyle(.page)
+                    autoSection
                 }
-                .tabViewStyle(.page)
-                autoSection
             }
+            .frame(width: 650)
+            Color.clear
+                .background(RoundedRectangle(cornerRadius: 33.0)
+                    .fill(.ultraThickMaterial))
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 49.0)
+                    .fill(.ultraThinMaterial))
+                .padding()
         }
-        .frame(width: 650)
     }
 }
 

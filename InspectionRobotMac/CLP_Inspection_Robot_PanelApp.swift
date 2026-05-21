@@ -20,8 +20,8 @@ struct CLP_Inspection_Robot_PanelApp: App {
     @StateObject var fbgStatus = FBGStatusObject()
 
     private let FullMinSize = CGSize(width: 2000, height: 1000)
-    private let contentMinSize = CGSize(width: 1300, height: 1200)
-    private let userViewContentMinSize = CGSize(width: 800, height: 1200)
+    private let contentMinSize = CGSize(width: 1300, height: 1000)
+    private let userViewContentMinSize = CGSize(width: 650, height: 1000)
     private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
     
     
@@ -29,8 +29,9 @@ struct CLP_Inspection_Robot_PanelApp: App {
     var body: some Scene {
         WindowGroup(id: "main") {
             
+            
             GeometryReader { proxy in
-                
+
                 let isFullScreen = proxy.size.width > FullMinSize.width && proxy.size.height > FullMinSize.height
                 let smallerThenMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
                 
@@ -72,6 +73,7 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 }.keyboardShortcut(.return, modifiers: .command)
             }
             .background(Image("Watermark"))
+
             .onReceive(elCidStatus.timer) { _ in
                 logger.info("elCid Fetching Status")
                 elCidStatus.fetchStatus(ip: settings.ip, port: settings.port)

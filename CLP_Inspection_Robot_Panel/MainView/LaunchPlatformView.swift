@@ -76,19 +76,19 @@ extension LaunchPlatformView {
                 Text(String(format: "%02d", Int(slot)))
                     .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
-                    .font(.system(size: enabled && !compact ? 200 : 100))
+                    .font(.system(size: enabled && !compact ? 200 : 90))
             } else {
                 Text("Angle")
                     .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
                     
                 Text(enabled ? String(format: "%03d", Int(self.viewModel.previewLP_angle)) : String(format: "%03d", Int(launchPlatformStatus.status.angle)))
-                    .font(.system(size: enabled && !compact ? 180 : 100))
+                    .font(.system(size: enabled && !compact ? 180 : 70))
                     .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
                     
                 
-                Text(String(format: "%02d", Int(fractionalPart * 100)))
+                Text(String(format: "%02d", Int(fractionalPart * 90)))
                     .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
                     
