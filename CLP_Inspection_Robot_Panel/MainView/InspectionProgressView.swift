@@ -14,7 +14,7 @@ struct InspectionProgressView: View {
 
     func color(for value: Int) -> Color {
         if value == 0{
-            return .gray
+            return .black
         }
         else if value < 700 {
             return .red
@@ -104,24 +104,21 @@ struct InspectionSlotCardView: View {
     
     var body: some View {
         VStack{
-            HStack{
-                HStack{
-                    Text("Slot")
-                    Image(systemName: "\(slot.slot_id).circle.fill")
-                }
-                Spacer()
-//                Text("Progress")
-//                    .foregroundStyle(Constants.notBlack)
-////                    .padding()
-//                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
-                
-            }
-            .padding(.horizontal)
             
-            TestProgressBar(label : "EL-CID", value : slot.EL_CID_Progress, color: .green)
-//            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
-            InspectionProgressView()
+                
+                
+                TestProgressBar(label : "EL-CID", value : slot.EL_CID_Progress, color: .green)
+                //            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
+                InspectionProgressView()
+            
         }
+        .overlay(alignment: .topTrailing, content: {
+            HStack{
+                Text("Slot")
+                Image(systemName: "\(slot.slot_id).circle.fill")
+            }
+            .font(.title2)
+        })
         .padding()
         .background(RoundedRectangle(cornerRadius: 33.0)
                 .fill(.ultraThickMaterial))
@@ -129,7 +126,7 @@ struct InspectionSlotCardView: View {
         .padding()
         .font(.title)
         .contentTransition(.numericText(countsDown: true))
-        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial))
+        .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial).stroke(current_slot ? .white : .clear, lineWidth: 3))
         .padding()
     }
 }
@@ -154,7 +151,8 @@ extension InspectionSlotCardView{
                     .frame(maxWidth: .infinity)
                     .padding(.vertical)
                     .contentTransition(.numericText(countsDown: true))
-                    .background(RoundedRectangle(cornerRadius: 18.0).fill(value != 1.0 ? .gray : color))
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(value != 1.0 ? .black : color))
+                    
             }.clipShape(.rect(cornerRadius: 33))
         }
         

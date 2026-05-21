@@ -57,7 +57,7 @@ struct ContentView: View {
                         ledView
                     }
                 }
-                .tabViewStyle(.sidebarAdaptable)
+                .tabViewStyle(.page)
             }
         }
     }

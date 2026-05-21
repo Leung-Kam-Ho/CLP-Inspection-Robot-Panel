@@ -58,6 +58,7 @@ struct Robot_Image : View{
 struct GridRelayView : View{
     @EnvironmentObject var robotStatus : RobotStatusObject
     let notBlack = Color(red: 24/255, green: 24/255, blue: 24/255)
+    var pressure_view = true
     var body: some View{
         VStack{
             VStack{
@@ -77,8 +78,11 @@ struct GridRelayView : View{
                             }
                         }
                     }
-                    PressureView(enabled : false)
-                        .disabled(true)
+                    if pressure_view{
+                        PressureView(enabled : false)
+                            .disabled(true)
+                    }
+                    
                     HStack{
                         Section{
                             let idx = 8

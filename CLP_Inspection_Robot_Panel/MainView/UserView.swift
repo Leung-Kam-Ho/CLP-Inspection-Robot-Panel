@@ -15,6 +15,9 @@ struct UserView: View {
     
     @State var selected_slot : Int = 0
     var body: some View {
+
+        let current_slot = Int(launchPlatformStatus.status.angle / Float(Constants.SLOT_DISTANCE_DEGREE))
+        let slot_aligned = current_slot == selected_slot
         let auto_btn =
         AutoView()
             .padding()
@@ -27,12 +30,13 @@ struct UserView: View {
         }){
             GroupBox("Control"){
                 VStack{
-                    GridRelayView()
+                    GridRelayView(pressure_view : false)
                 }
             }
             .clipShape(.rect(cornerRadius: 33))
             .padding()
                 .background(RoundedRectangle(cornerRadius: 49.0)
+//                    .stroke(robotStatus.status.connected ? .green : .gray,lineWidth: 3)
                     .fill(.ultraThinMaterial))
         }
         .buttonStyle(.plain)
@@ -44,34 +48,30 @@ struct UserView: View {
             GroupBox("LaunchPlatform"){
                 VStack{
                     LaunchPlatformView(enabled : false)
-                    
+                        
                 }
+
             }
+            
             .clipShape(.rect(cornerRadius: 33))
             .padding()
-                .background(RoundedRectangle(cornerRadius: 49.0)
-                    .fill(.ultraThinMaterial))
+            .background(RoundedRectangle(cornerRadius: 49.0)
+//                .stroke(launchPlatformStatus.status.connected ? .orange : .gray, lineWidth: 3)
+                .fill(.ultraThinMaterial))
             
             
-        }.buttonStyle(.plain).opacity(launchPlatformStatus.status.connected ? 1 : 0.5)
+        }
+        .buttonStyle(.plain).opacity(launchPlatformStatus.status.connected ? 1 : 0.5)
+        
         let autoSection =
         HStack {
             let inProgress = (autoStatus.status.mode != "Manual")
-            Button(action:{
-                
-            }){
-                Label( "\(inProgress ? "Stop" : "Start")",systemImage: inProgress ? "stop.fill" : "play.fill")
-                    .padding()
-                    .padding(.horizontal)
-                    .tint(.primary)
-                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : .green))
-            }
-            Spacer()
             Button(action:{
                 let slot_angle = (Double(selected_slot) * 12.0) + 6
                 LaunchPlatformStatusObject.RotatePlatform(ip: settings.ip, port: settings.port, value: .degrees(slot_angle))
                 
             }){
+                    
                     HStack{
                         Text("Go To Slot")
                         Image(systemName: "\(selected_slot+1).circle.fill")
@@ -82,6 +82,19 @@ struct UserView: View {
                     .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .gray : .orange))
             }
             .disabled(inProgress)
+            Spacer()
+            Button(action:{
+                
+            }){
+                Label( "\(inProgress ? "Stop" : "Start")",systemImage: inProgress ? "stop.fill" : "play.fill")
+                    .padding()
+                    .padding(.horizontal)
+                    .tint(.primary)
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
+            }
+            .disabled(!slot_aligned)
+//            Spacer()
+            
 //            Spacer()
 //            Text(autoStatus.status.mode)
 //                .lineLimit(1)
@@ -114,20 +127,22 @@ struct UserView: View {
                 .frame(width:120)
                 
                 VStack{
-                    TabView{
-                        launch_platform_btn
-                        pressure_btn
-                        auto_btn
-                    }
-                    .frame(height: 450)
-                    .tabViewStyle(.page)
+                    launch_platform_btn
+//                    TabView{
+//                        
+//                        auto_btn
+//                    }
+//                    .frame(height: 430)
+//                    .tabViewStyle(.page)
                     .padding()
+                    pressure_btn
+                        .padding()
                     
                     // tab view for inspection progress, total 30 slots, each slot has its own progress view, and can be selected to show more details
                     TabView(selection: $selected_slot){
                         ForEach(0..<30) { index in
                             let slot = InspectionProgressView.Inspection_Slot_Progress(slot_id: index + 1, EL_CID_Progress: 0.0, Knocker_result: 0.0)
-                            InspectionSlotCardView(slot: slot, current_slot: index + 1 == selected_slot)
+                            InspectionSlotCardView(slot: slot, current_slot: index == current_slot)
                         }
                     }
                     .tabViewStyle(.page)
@@ -135,13 +150,15 @@ struct UserView: View {
                 }
             }
             .frame(width: 650)
-            Color.clear
-                .background(RoundedRectangle(cornerRadius: 33.0)
-                    .fill(.ultraThickMaterial))
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 49.0)
-                    .fill(.ultraThinMaterial))
-                .padding()
+//            Color.clear
+//                .background(RoundedRectangle(cornerRadius: 33.0)
+//                    .fill(.ultraThickMaterial))
+//                .padding()
+//                .background(RoundedRectangle(cornerRadius: 49.0)
+//                    .fill(.ultraThinMaterial))
+//                .padding()
+            ContentView()
+//                .tabViewStyle(.page)
         }
     }
 }
