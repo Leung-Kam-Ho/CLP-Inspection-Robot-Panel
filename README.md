@@ -14,6 +14,12 @@ The CLP Inspection Robot Panel is a software application designed to control and
 - **Data Visualization & Analysis**: Real-time feedback and data visualization.
 - **Modern User Interface**: A highly optimized, user-friendly UI with responsive layouts, improved readability, and tabbed navigation.
 
+## Related Repository
+
+This repository contains the GUI control panel software for the inspection robot. For the robot's core ROS2 source code, hardware details, and backend implementation, please visit the main robot repository:
+
+- [CLP_Inspection_robot_ROS2](https://github.com/Leung-Kam-Ho/CLP_Inspection_robot_ROS2)
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
