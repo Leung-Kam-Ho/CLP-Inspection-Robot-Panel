@@ -68,7 +68,11 @@ struct GridRelayView : View{
                     HStack{
                         ForEach(1...4, id:\.self){ idx in
                                 let opened = get_state(idx)
-                                Image(systemName: "\(idx).circle.fill")
+                            
+                                HStack{
+                                    Text("F")
+                                    Image(systemName: "\(idx).circle.fill")
+                                }
                                     .padding()
                                     .foregroundStyle(Constants.offWhite)
                                     .background(RoundedRectangle(cornerRadius: 25.0)
@@ -89,11 +93,12 @@ struct GridRelayView : View{
                             let opened = get_state(idx)
                             //                                        let state = "1"
                             
-                            Image(systemName: "\(idx).circle.fill")
+//                            Image(systemName: "\(idx).circle.fill")
+                            Text("Tapper")
                                 .padding()
                                 .tint(.primary)
                                 .foregroundStyle(Constants.offWhite)
-                                .background(Circle()
+                                .background(RoundedRectangle(cornerRadius: 25.0)
                                     .fill(opened ? .orange : notBlack))
     //                            .foregroundStyle(.background)
                         }
@@ -101,18 +106,22 @@ struct GridRelayView : View{
                         Section{
                             let idx = 7
                             let opened = get_state(idx)
-                            Image(systemName: "\(idx).circle.fill")
+//                            Image(systemName: "\(idx).circle.fill")
+                            Text("EL-CID")
                                 .padding()
                                 .foregroundStyle(Constants.offWhite)
                                 .tint(.primary)
-                                .background( Circle()
+                                .background( RoundedRectangle(cornerRadius: 25.0)
                                     .fill(opened ? .orange : notBlack))
                         }
                         Spacer()
                         
                         ForEach(5...6, id:\.self){ idx in
                                 let opened = get_state(idx)
-                                Image(systemName: "\(idx).circle.fill")
+                                HStack{
+                                    Text("T")
+                                    Image(systemName: "\(idx-4).circle.fill")
+                                }
                                     .padding()
                                     .foregroundStyle(Constants.offWhite)
                                     

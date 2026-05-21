@@ -18,23 +18,31 @@ struct UserView: View {
 
         let current_slot = Int(launchPlatformStatus.status.angle / Float(Constants.SLOT_DISTANCE_DEGREE))
         let slot_aligned = current_slot == selected_slot
-        let auto_btn =
-        AutoView()
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 49.0)
-                .fill(.ultraThinMaterial)
-                .stroke(.white)
-            )
-        let pressure_btn =
+
+        let robot_btn =
         Button(action:{
         }){
             GroupBox("Control"){
                 VStack{
                     GridRelayView(pressure_view : false)
                 }
+                
             }
+            
+            
             .clipShape(.rect(cornerRadius: 33))
+            .overlay(alignment: .topTrailing, content: {
+                if robotStatus.status.connected{
+                    Text("●")
+                        .foregroundStyle(.green)
+                        .font(.caption)
+                        .padding()
+                }
+//                    .padding()
+            })
+            
             .padding()
+            
                 .background(RoundedRectangle(cornerRadius: 49.0)
 //                    .stroke(robotStatus.status.connected ? .green : .gray,lineWidth: 3)
                     .fill(.ultraThinMaterial))
@@ -52,6 +60,14 @@ struct UserView: View {
                 }
 
             }
+            .overlay(alignment: .topTrailing, content: {
+                if launchPlatformStatus.status.connected{
+                    Text("●")
+                        .foregroundStyle(.orange)
+                        .font(.caption)
+                        .padding()
+                }
+            })
             
             .clipShape(.rect(cornerRadius: 33))
             .padding()
@@ -76,7 +92,7 @@ struct UserView: View {
                         Text("Go To Slot")
                         Image(systemName: "\(selected_slot+1).circle.fill")
                     }
-                    .padding()
+                    .padding(10)
                     .padding(.horizontal)
                     .tint(.primary)
                     .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .gray : .orange))
@@ -84,10 +100,14 @@ struct UserView: View {
             .disabled(inProgress)
             Spacer()
             Button(action:{
-                
+                if !inProgress{
+                    AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Enter.rawValue)
+                }else{
+                    AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Manual.rawValue)
+                }
             }){
                 Label( "\(inProgress ? "Stop" : "Start")",systemImage: inProgress ? "stop.fill" : "play.fill")
-                    .padding()
+                    .padding(10)
                     .padding(.horizontal)
                     .tint(.primary)
                     .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
@@ -100,7 +120,7 @@ struct UserView: View {
 //                .lineLimit(1)
 //                .padding()
         }
-        
+        .font(.title2)
         .frame(maxWidth: .infinity)
         .padding()
         .background(RoundedRectangle(cornerRadius: 33.0).fill(.ultraThinMaterial).stroke(.white, lineWidth: 2))
@@ -121,21 +141,16 @@ struct UserView: View {
                 }
                 .frame(maxHeight:.infinity)
                 .padding()
-                .background(RoundedRectangle(cornerRadius: 17.0)
+                .background(RoundedRectangle(cornerRadius: 33.0)
                     .fill(.ultraThickMaterial))
                 .padding()
                 .frame(width:120)
                 
                 VStack{
                     launch_platform_btn
-//                    TabView{
-//                        
-//                        auto_btn
-//                    }
-//                    .frame(height: 430)
-//                    .tabViewStyle(.page)
+
                     .padding()
-                    pressure_btn
+                    robot_btn
                         .padding()
                     
                     // tab view for inspection progress, total 30 slots, each slot has its own progress view, and can be selected to show more details
@@ -150,14 +165,9 @@ struct UserView: View {
                 }
             }
             .frame(width: 650)
-//            Color.clear
-//                .background(RoundedRectangle(cornerRadius: 33.0)
-//                    .fill(.ultraThickMaterial))
-//                .padding()
-//                .background(RoundedRectangle(cornerRadius: 49.0)
-//                    .fill(.ultraThinMaterial))
-//                .padding()
+
             ContentView()
+                .frame(minWidth:1000)
 //                .tabViewStyle(.page)
         }
     }

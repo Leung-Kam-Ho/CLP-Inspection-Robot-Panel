@@ -17,11 +17,11 @@ struct InspectionProgressView: View {
             return .black
         }
         else if value < 700 {
-            return .red
+            return .white
         } else if value < 750 {
-            return .yellow
+            return .white
         } else {
-            return .green
+            return .white
         }
     }
 
@@ -30,10 +30,10 @@ struct InspectionProgressView: View {
         if value == 0 {
             return 1.0
         }
-        let minValue = 650.0
+        let minValue = 640.0
         let maxValue = 800.0
         let clampedValue = max(min(Double(value), maxValue), minValue)
-        return 1.0 - (clampedValue - minValue) / (maxValue - minValue) * 0.8
+        return (clampedValue - minValue) / (maxValue - minValue)
     }
 
     func randomizeValues() {
@@ -118,10 +118,11 @@ struct InspectionSlotCardView: View {
                 Image(systemName: "\(slot.slot_id).circle.fill")
             }
             .font(.title2)
+            .padding()
         })
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 33.0)
-                .fill(.ultraThickMaterial))
+//        .padding()
+//        .background(RoundedRectangle(cornerRadius: 33.0)
+//                .fill(.ultraThickMaterial))
         .id(slot.slot_id)
         .padding()
         .font(.title)
@@ -144,6 +145,7 @@ extension InspectionSlotCardView{
 //                    .frame(width: 100)
 //                    .padding()
 //                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
+                
                 Text(String(format: "%.1f",(value ?? 0.0) * 100) + "%" )
                     .font(.title2)
                     .lineLimit(1)
