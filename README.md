@@ -8,10 +8,11 @@ The CLP Inspection Robot Panel is a software application designed to control and
 
 ## Features
 
-- Real-time monitoring of inspection robot status
-- Control and navigation of inspection robots
-- Data visualization and analysis
-- User-friendly interface
+- **Real-time Monitoring & Status Tracking**: Live monitoring of inspection robot status, including a conditional pressure view and advanced automation status tracking.
+- **Robot Control & Navigation**: Comprehensive control and navigation of inspection robots.
+- **Automation Modes**: Easily switch between and manage different automation modes via a dedicated selection menu.
+- **Data Visualization & Analysis**: Real-time feedback and data visualization.
+- **Modern User Interface**: A highly optimized, user-friendly UI with responsive layouts, improved readability, and tabbed navigation.
 
 ## Installation
 
