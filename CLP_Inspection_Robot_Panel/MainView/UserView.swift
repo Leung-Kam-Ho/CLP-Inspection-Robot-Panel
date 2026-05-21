@@ -101,41 +101,39 @@ struct UserView: View {
             Spacer()
             Button(action:{
                 if !inProgress{
-                    AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Enter.rawValue)
+                    AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: autoStatus.autoModeDetail.rawValue)
                 }else{
                     AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Manual.rawValue)
                 }
             }){
-                Menu(content: {
-                    Section {
-                        ForEach(AutoMode.allCases, id: \.self) { mode in
-                            let name = mode.rawValue
-                            if mode != .Manual && mode != .Testing{
-                                Button(action: {
-                                    switch mode {
-                                    case .Manual, .Testing:
-                                        AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: name)
-                                    default:
-                                        autoStatus.autoModeDetail = mode
-                                    }
+                Label( "\(inProgress ? "Stop" : "\(autoStatus.autoModeDetail.rawValue)")",systemImage: inProgress ? "stop.fill" : "play.fill")
+                    .padding(10)
+                    .padding(.horizontal)
+                    .tint(.primary)
+                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
+            }
+            .contextMenu {
+                Section {
+                    ForEach(AutoMode.allCases, id: \.self) { mode in
+                        let name = mode.rawValue
+                        if mode != .Manual && mode != .Testing{
+                            Button(action: {
+                                switch mode {
+                                case .Manual, .Testing:
+                                    AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: name)
+                                default:
                                     autoStatus.autoModeDetail = mode
-                                }, label: {
-                                    Text(name)
-                                        .font(.title)
-                                        .padding()
-                                })
-                            }
-                            
+                                }
+                                autoStatus.autoModeDetail = mode
+                            }, label: {
+                                Text(name)
+                                    .font(.title)
+                                    .padding()
+                            })
                         }
+                        
                     }
-                }, label: {
-                    Label( "\(inProgress ? "Stop" : "\(autoStatus.autoModeDetail.rawValue)")",systemImage: inProgress ? "stop.fill" : "play.fill")
-                        .padding(10)
-                        .padding(.horizontal)
-                        .tint(.primary)
-                        .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
-                })
-                
+                }
             }
             .disabled(!slot_aligned)
 //            Spacer()
