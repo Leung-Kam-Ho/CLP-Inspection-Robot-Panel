@@ -128,6 +128,7 @@ class AutomationStatusObject: BaseStatusObject<AutomationStatus> {
         var mode : String
     }
     var autoMode: AutomationStatus.AutoMode_segment = .Manual
+    var autoModeDetail: AutoMode = .Enter
     init() {
         super.init(initialStatus: AutomationStatus(), statusRoute: "/auto_status")
     }

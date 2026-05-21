@@ -106,11 +106,36 @@ struct UserView: View {
                     AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Manual.rawValue)
                 }
             }){
-                Label( "\(inProgress ? "Stop" : "Start")",systemImage: inProgress ? "stop.fill" : "play.fill")
-                    .padding(10)
-                    .padding(.horizontal)
-                    .tint(.primary)
-                    .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
+                Menu(content: {
+                    Section {
+                        ForEach(AutoMode.allCases, id: \.self) { mode in
+                            let name = mode.rawValue
+                            if mode != .Manual && mode != .Testing{
+                                Button(action: {
+                                    switch mode {
+                                    case .Manual, .Testing:
+                                        AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: name)
+                                    default:
+                                        autoStatus.autoModeDetail = mode
+                                    }
+                                    autoStatus.autoModeDetail = mode
+                                }, label: {
+                                    Text(name)
+                                        .font(.title)
+                                        .padding()
+                                })
+                            }
+                            
+                        }
+                    }
+                }, label: {
+                    Label( "\(inProgress ? "Stop" : "\(autoStatus.autoModeDetail.rawValue)")",systemImage: inProgress ? "stop.fill" : "play.fill")
+                        .padding(10)
+                        .padding(.horizontal)
+                        .tint(.primary)
+                        .background(RoundedRectangle(cornerRadius: 17.0).fill(inProgress ? .red : slot_aligned ? .green : .gray))
+                })
+                
             }
             .disabled(!slot_aligned)
 //            Spacer()
