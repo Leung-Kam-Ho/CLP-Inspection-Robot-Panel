@@ -14,24 +14,6 @@ The CLP Inspection Robot Panel is a software application designed to control and
 - **Data Visualization & Analysis**: Real-time feedback and data visualization.
 - **Modern User Interface**: A highly optimized, user-friendly UI with responsive layouts, improved readability, and tabbed navigation.
 
-## Installation
-
-To install the CLP Inspection Robot Panel, follow these steps:
-
-1. Clone this repository to your local machine.
-2. Build the Application
-
-**Reminder:** The IP of the PC attached to the robot must be `station.local`. Due to the industrial nature of this project, we can only test the robot with the specified machine.
-
-## Usage
-
-Once the CLP Inspection Robot Panel is installed, you can boot the robot using it by following these Siri shortcuts:
-
-- [Start Robot](https://www.icloud.com/shortcuts/d40e66d086da4a589ca3df6a436ce7e0)
-- [Stop Robot](https://www.icloud.com/shortcuts/f4537067d1434e32a2c0067a7b7df71c)
-
-**Reminder:** The robot will boot automatically once the PC is turned on. The Siri shortcuts should only be used in emergencies.
-
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
