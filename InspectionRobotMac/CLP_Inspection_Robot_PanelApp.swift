@@ -37,22 +37,20 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 
                 HStack {
                     if !smallerThenMinSize && !settings.forceUserView{
-                        ContentView(disable_robot: isFullScreen)
+                        
                         if isFullScreen {
-                            ControlView()
-                                .clipShape(RoundedRectangle(cornerRadius: 33))
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 49)
-                                        .fill(.ultraThinMaterial)
-                                        .stroke(.white)
-                                )
-                                .padding()
+                            HStack{
+                                UserView()
+//                                Spacer()
+                                
+                            }
+                        }else{
+                            ContentView(disable_robot: isFullScreen)
                         }
                     }else{
                         HStack{
                             UserView()
-                            Spacer()
+//                            Spacer()
                             
                         }
                         

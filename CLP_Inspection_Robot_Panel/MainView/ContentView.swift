@@ -19,15 +19,16 @@ struct ContentView: View {
             
             HStack {
                 TabView(selection: self.$viewModel.selectedTab) {
+                    Tab("Auto", systemImage: "point.topright.filled.arrow.triangle.backward.to.point.bottomleft.scurvepath", value: Tabs.Auto) {
+                        autoView
+                    }
                     if bigEnough {
                         Tab("All", systemImage: "widget.small", value: Tabs.All) {
                             ConceptView(selection: self.$viewModel.selectedTab)
                         }
                     }
                     
-                    Tab("Auto", systemImage: "point.topright.filled.arrow.triangle.backward.to.point.bottomleft.scurvepath", value: Tabs.Auto) {
-                        autoView
-                    }
+                    
                     
 //                    Tab("Camera", systemImage: "camera.fill", value: Tabs.Camera) {
 //                        cameraView

@@ -53,7 +53,7 @@ class LaunchPlatformStatus: Codable, ObservableObject, Equatable {
 
 class AutomationStatus: Codable, ObservableObject, Equatable {
     enum AutoMode_segment: String, CaseIterable {
-        case Manual, Standing, Lauch, Baffle, Testing
+        case Manual, Standing, Lauch, Stairs, Baffle, Testing
     }
     var sequence_name: String = ""
     var mode: String = "Manual"

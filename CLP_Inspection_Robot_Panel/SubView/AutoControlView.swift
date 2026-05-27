@@ -27,6 +27,9 @@ struct AutoControlView: View {
             case .Lauch:
                 logger.info("Setting mode to Enter from Launch")
                 AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Enter.rawValue)
+            case .Stairs:
+                logger.info( "Setting mode to Enter_Generator from Stairs")
+                AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Enter_Stairs.rawValue)
             case .Baffle:
                 logger.info("Setting mode to Enter_Generator from Baffle")
                 AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Enter_Generator.rawValue)
@@ -36,6 +39,7 @@ struct AutoControlView: View {
                 logger.info("Moving robot: left=\(left), right=\(right)")
                 RobotStatusObject.setServo(ip: settings.ip, port: settings.port, servo: [left,right,left,right])
             }
+            
             
         }){
             Image(systemName: "arrowtriangle.up.fill")
@@ -71,6 +75,9 @@ struct AutoControlView: View {
             case .Lauch:
                 logger.info("Setting mode to Exit from Launch")
                 AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Exit.rawValue)
+            case .Stairs:
+                logger.info( "Setting mode to Exit_Generator from Stairs")
+                AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Exit_Stairs.rawValue)
             case .Baffle:
                 logger.info("Setting mode to Exit_Generator from Baffle")
                 AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Exit_Generator.rawValue)

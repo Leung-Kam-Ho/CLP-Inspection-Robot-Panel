@@ -243,6 +243,8 @@ enum AutoMode: String, CaseIterable {
     case Exit
     case Elevate
     case Drop
+    case Enter_Stairs
+    case Exit_Stairs
     case Enter_Generator
     case Exit_Generator
     case Testing
