@@ -14,7 +14,7 @@ enum AutoMode_segment: String, CaseIterable {
 }
 
 // Base class for status objects to avoid code duplication
-class BaseStatusObject<T>: ObservableObject where T: Decodable & Equatable {
+class BaseStatusObject<T: Decodable & Equatable & CustomStringConvertible>: ObservableObject {
     @Published var status: T
     private let initialStatus: T
     private let networkManager = NetworkManager.shared
@@ -35,7 +35,7 @@ class BaseStatusObject<T>: ObservableObject where T: Decodable & Equatable {
                     withAnimation(.easeInOut){
                         
                         if self.status != status {
-                            print("Status updated: \(status)")
+                            Logger().debug("Status updated: \(status)")
                             
                             self.status = status
                         }
@@ -44,7 +44,7 @@ class BaseStatusObject<T>: ObservableObject where T: Decodable & Equatable {
             case .failure(let error):
                 DispatchQueue.main.async {
                     // Handle error on the main thread
-                    print("Failed to fetch status: \(error.localizedDescription)")
+                    Logger().debug("Failed to fetch status: \(error.localizedDescription)")
                 
                     self.status = self.initialStatus // Reset to initial status on error
                 }
@@ -57,9 +57,9 @@ class BaseStatusObject<T>: ObservableObject where T: Decodable & Equatable {
         NetworkManager.postRequest(ip: ip, port: port, route: route, value: data) { success in
             DispatchQueue.main.async {
                 if success {
-                    print("POST request succeeded")
+                    Logger().debug("POST request succeeded")
                 } else {
-                    print("POST request failed")
+                    Logger().debug("POST request failed")
                 }
             }
         }

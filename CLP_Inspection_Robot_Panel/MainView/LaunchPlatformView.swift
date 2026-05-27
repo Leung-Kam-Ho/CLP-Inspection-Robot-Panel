@@ -14,7 +14,7 @@ struct LaunchPlatformView: View {
     @State var show_slot = true
     var title = true
     
-    let img_list = ["arrow.left.arrow.right.circle.fill", "lock.circle.fill", "popcorn.circle.fill", "lifepreserver.fill"]
+    let img_list = ["arrow.left.arrow.right.circle.fill", "lock.open.rotation", "brakesignal.dashed", "lifepreserver.fill"]
     
     var body: some View {
         HStack {
