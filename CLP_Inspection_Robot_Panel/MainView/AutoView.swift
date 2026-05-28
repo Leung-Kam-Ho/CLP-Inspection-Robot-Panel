@@ -13,72 +13,79 @@ struct AutoMenu<Content: View>: View {
     }
     
     var body: some View {
-        Menu(content: {
-            let inProgress = (self.autoStatus.status.mode != "Manual")
+        Menu {
+            let inProgress = (autoStatus.status.mode != "Manual")
             
             Section {
                 ForEach(AutoMode_segment.allCases, id: \.self) { mode in
                     let name = mode.rawValue
-                    Button(action: {
-                        switch mode {
-                        case .Manual, .Testing:
+                    Button {
+                        if mode == .Manual || mode == .Testing {
                             AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: name)
-                        default:
-                            autoStatus.autoMode = mode
                         }
                         autoStatus.autoMode = mode
-                    }, label: {
+                    } label: {
                         Text(name)
                             .font(.title)
                             .padding()
-                    })
+                    }
                 }
             }
             
             if inProgress {
-                Button(role: .destructive, action: {
+                Button(role: .destructive) {
                     AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Manual.rawValue)
-                }, label: {
+                } label: {
                     Text("Stop Inspection")
                         .font(.title)
                         .padding()
-                })
+                }
                 .keyboardShortcut("s", modifiers: .command)
             } else {
-                Button(action: {
+                Button {
                     AutomationStatusObject.setMode(ip: settings.ip, port: settings.port, mode: AutoMode.Manual.rawValue)
-                }, label: {
+                } label: {
                     Label("Start Inspection", systemImage: "text.page.badge.magnifyingglass")
                         .bold()
                         .foregroundStyle(.green)
                         .padding()
-                })
+                }
                 .foregroundStyle(.green)
             }
-        }, label: {
-            self.content
-        })
+        } label: {
+            content
+        }
     }
 }
 
+// MARK: - AutoStageView
 struct AutoStageView: View {
     @EnvironmentObject var autoStatus: AutomationStatusObject
-    let inspectionStages : [AutoMode] = [.Manual,.Enter, .Drop, .Enter_Stairs, .Enter_Generator, .Exit_Generator, .Exit_Stairs, .Elevate, .Exit]
+    
+    private let inspectionStages: [AutoMode] = [
+        .Manual, .Enter, .Drop, .Enter_Stairs, .Enter_Generator,
+        .Exit_Generator, .Exit_Stairs, .Elevate, .Exit
+    ]
+    
+    private var currentStageIndex: Int {
+        let currentMode = AutoMode(rawValue: autoStatus.status.mode) ?? .Manual
+        return inspectionStages.firstIndex(of: currentMode) ?? 0
+    }
     
     var body: some View {
-        let totaleStage: Int = inspectionStages.count
-        let currentMode: AutoMode = AutoMode(rawValue: autoStatus.status.mode) ?? .Manual
-        let currentStage: Int = inspectionStages.firstIndex(of: currentMode) ?? 0
-        VStack{
-            ForEach(0..<totaleStage, id: \.self) { index in
-                let content : String = index != 0 ? "\(index)" : "m"
-                Image(systemName: index == currentStage ? "\(content).circle.fill" : "\(content).circle")
+        VStack {
+            ForEach(0..<inspectionStages.count, id: \.self) { index in
+                Image(systemName: symbolForStage(at: index))
                     .foregroundColor(Constants.offWhite)
                     .padding()
                     .font(.title)
             }
-            
         }
+    }
+    
+    private func symbolForStage(at index: Int) -> String {
+        let content = index != 0 ? "\(index)" : "m"
+        return index == currentStageIndex ? "\(content).circle.fill" : "\(content).circle"
     }
 }
 
@@ -87,7 +94,7 @@ struct AutoView: View {
     @EnvironmentObject var autoStatus: AutomationStatusObject
     @EnvironmentObject var settings: SettingsHandler
     
-    @State var viewModel = ViewModel()
+    @State private var viewModel = ViewModel()
     
     var body: some View {
         VStack {
@@ -125,9 +132,9 @@ struct AutoView: View {
             TextField("Enter custom IP", text: $viewModel.custom_ip)
                 .font(.caption)
             Button("Cancel", role: .cancel, action: {})
-            Button("OK", action: {
+            Button("OK") {
                 settings.ip = viewModel.custom_ip
-            })
+            }
         } message: {
             Text("Xcode will print whatever you type.")
         }
@@ -135,9 +142,9 @@ struct AutoView: View {
             TextField("Enter custom camera IP", text: $viewModel.custom_cam_ip)
                 .font(.caption)
             Button("Cancel", role: .cancel, action: {})
-            Button("OK", action: {
+            Button("OK") {
                 settings.cam_ip = viewModel.custom_cam_ip
-            })
+            }
         } message: {
             Text("Xcode will print whatever you type.")
         }
@@ -149,10 +156,13 @@ extension AutoView {
     
     private var headerMenu: some View {
         let connected = autoStatus.status.connected
-        return Menu(content: {
+        let mt = autoStatus.status.action_update.isEmpty
+        
+        return Menu {
             Button("custom") {
                 viewModel.showAlert.toggle()
-            }.tag(viewModel.custom_ip)
+            }
+            .tag(viewModel.custom_ip)
             
             Text("IP : \(settings.ip)")
             
@@ -160,7 +170,8 @@ extension AutoView {
             
             Button("custom camera ip") {
                 viewModel.showAlert_camera.toggle()
-            }.tag(viewModel.custom_cam_ip)
+            }
+            .tag(viewModel.custom_cam_ip)
             
             Text("Camera IP : \(settings.cam_ip)")
             
@@ -169,22 +180,19 @@ extension AutoView {
             Button("Change Fetch Rate") {
                 viewModel.showAlert_fetch.toggle()
             }
-        }, label: {
+        } label: {
             VStack {
-                let mt = autoStatus.status.action_update == ""
-                Text(connected ? (mt ? self.autoStatus.autoMode.rawValue : "Current Action") : "Server offline")
+                Text(connected ? (mt ? autoStatus.autoMode.rawValue : "Current Action") : "Server offline")
                     .padding()
-                    .contentTransition(.numericText(countsDown: true))
                 
-                Text(autoStatus.status.action_update == "" ? "No Action" : autoStatus.status.action_update)
+                Text(mt ? "No Action" : autoStatus.status.action_update)
                     .padding()
-                    .contentTransition(.numericText(countsDown: true))
                     .frame(maxWidth: .infinity)
                     .background(RoundedRectangle(cornerRadius: 25.0).fill(.ultraThinMaterial))
                     .padding()
             }
             .background(RoundedRectangle(cornerRadius: 33.0).fill(connected ? .green : .red))
-        })
+        }
         .buttonStyle(.plain)
     }
     
@@ -192,20 +200,15 @@ extension AutoView {
         ScrollViewReader { scrollView in
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 40) {
-                    ForEach(Array(tree2List().enumerated()), id: \.0) { idx, name in
+                    ForEach(Array(tree2List().enumerated()), id: \.0) { _, name in
                         VStack(alignment: .leading) {
                             Text(name.replacingOccurrences(of: "-->", with: "").trimmingCharacters(in: .whitespacesAndNewlines))
                                 .tint(.primary)
-                                .contentTransition(.numericText(countsDown: true))
                             
                             if name.contains("🏃🏻‍➡️") {
                                 Text(autoStatus.status.action_update)
                                     .foregroundStyle(.orange)
                                     .id("current_Action")
-                                    .contentTransition(.numericText(countsDown: true))
-                                    .onAppear {
-                                        scrollView.scrollTo("current_Action")
-                                    }
                             }
                         }
                         .padding()
@@ -215,19 +218,24 @@ extension AutoView {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding()
+            .onChange(of: autoStatus.status.action_update) { _, _ in
+                withAnimation {
+                    scrollView.scrollTo("current_Action", anchor: .center)
+                }
+            }
         }
     }
     
     private var bottomStatusRow: some View {
         HStack {
-            AutoMenu(content: {
+            AutoMenu {
                 let inProgress = (autoStatus.status.mode != "Manual")
                 Image(systemName: inProgress ? "stop.fill" : "play.fill")
                     .padding()
                     .padding(.horizontal)
                     .tint(.primary)
                     .background(RoundedRectangle(cornerRadius: 33.0).fill(inProgress ? .red : .green))
-            })
+            }
             
             Spacer()
             
@@ -266,7 +274,7 @@ extension AutoView {
         var show = false
     }
     
-    func splitAndFilterLines(text: String, targetStrings: [String]) -> [String] {
+    private func splitAndFilterLines(text: String, targetStrings: [String]) -> [String] {
         return text.split(separator: "\n")
             .map(String.init)
             .filter { line in
@@ -276,15 +284,14 @@ extension AutoView {
             }
     }
     
-    func tree2List() -> [String] {
+    private func tree2List() -> [String] {
         let tree = autoStatus.status.tree_ascii
         let better = tree
             .replacingOccurrences(of: "[o]", with: "✅")
             .replacingOccurrences(of: "[x]", with: "❌")
             .replacingOccurrences(of: "[*]", with: "🏃🏻‍➡️")
             .replacingOccurrences(of: "[-]", with: "💬")
-        let filtered = splitAndFilterLines(text: better, targetStrings: ["-->"])
-        return filtered
+        return splitAndFilterLines(text: better, targetStrings: ["-->"])
     }
 }
 
