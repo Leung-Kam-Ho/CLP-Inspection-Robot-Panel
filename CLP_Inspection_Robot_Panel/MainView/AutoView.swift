@@ -17,7 +17,7 @@ struct AutoMenu<Content: View>: View {
             let inProgress = (self.autoStatus.status.mode != "Manual")
             
             Section {
-                ForEach(AutomationStatus.AutoMode_segment.allCases, id: \.self) { mode in
+                ForEach(AutoMode_segment.allCases, id: \.self) { mode in
                     let name = mode.rawValue
                     Button(action: {
                         switch mode {

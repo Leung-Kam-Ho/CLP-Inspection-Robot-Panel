@@ -7,15 +7,13 @@
 
 import Foundation
 
-class RobotStatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class RobotStatus: Codable, ObservableObject, Equatable {
     var servo: [Int] = [1500, 1500, 1500, 1500]
     var relay: String = "00000000"
     var tof: [Int] = Array(repeating: 0, count: 18)
     var roll_angle: Int = 0
     var lazer: Int = 0
     var connected: Bool = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: RobotStatus, rhs: RobotStatus) -> Bool {
         return lhs.servo == rhs.servo &&
@@ -27,11 +25,9 @@ class RobotStatus: Codable, ObservableObject, Equatable, CustomStringConvertible
     }
 }
 
-class DigitalValve_Status: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class DigitalValve_Status: Codable, ObservableObject, Equatable {
     var pressure: [Double] = [0.0, 0.0, 0.0, 0.0]
     var connected: Bool = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: DigitalValve_Status, rhs: DigitalValve_Status) -> Bool {
         return lhs.pressure == rhs.pressure &&
@@ -39,14 +35,12 @@ class DigitalValve_Status: Codable, ObservableObject, Equatable, CustomStringCon
     }
 }
 
-class LaunchPlatformStatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class LaunchPlatformStatus: Codable, ObservableObject, Equatable {
     var angle: Float = 1.0
     var relay: String = "00000000"
     var connected: Bool = false
     var setpoint: Float = 0
     var lazer: Int = 0
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: LaunchPlatformStatus, rhs: LaunchPlatformStatus) -> Bool {
         return (lhs.angle*10).rounded() == (rhs.angle*10).rounded() &&
@@ -57,18 +51,14 @@ class LaunchPlatformStatus: Codable, ObservableObject, Equatable, CustomStringCo
     }
 }
 
-class AutomationStatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
-    enum AutoMode_segment: String, CaseIterable {
-        case Manual, Standing, Lauch, Stairs, Baffle, Testing
-    }
+class AutomationStatus: Codable, ObservableObject, Equatable {
+    
     var sequence_name: String = ""
     var mode: String = "Manual"
     var action_update: String = ""
     var action_name: String = ""
     var tree_ascii: String = ""
     var connected: Bool = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: AutomationStatus, rhs: AutomationStatus) -> Bool {
         return lhs.sequence_name == rhs.sequence_name &&
@@ -80,7 +70,7 @@ class AutomationStatus: Codable, ObservableObject, Equatable, CustomStringConver
     }
 }
 
-class AudioStatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class AudioStatus: Codable, ObservableObject, Equatable {
     var recording: Bool = false
     var file_num: Int = 0
     var date: String = ""
@@ -90,8 +80,6 @@ class AudioStatus: Codable, ObservableObject, Equatable, CustomStringConvertible
     var FFT_freq: [Float] = []
     var Audio: [Float] = []
     var connected: Bool = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: AudioStatus, rhs: AudioStatus) -> Bool {
         return lhs.recording == rhs.recording &&
@@ -106,12 +94,10 @@ class AudioStatus: Codable, ObservableObject, Equatable, CustomStringConvertible
     }
 }
 
-class ElCidstatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class ElCidstatus: Codable, ObservableObject, Equatable {
     var distance_per_click = 100
     var relay_state = 0
     var connected = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: ElCidstatus, rhs: ElCidstatus) -> Bool {
         return lhs.distance_per_click == rhs.distance_per_click &&
@@ -120,12 +106,10 @@ class ElCidstatus: Codable, ObservableObject, Equatable, CustomStringConvertible
     }
 }
 
-class FBGStatus: Codable, ObservableObject, Equatable, CustomStringConvertible {
+class FBGStatus: Codable, ObservableObject, Equatable {
     var feet: [Float] = [255,255,255,255]
     var tank: [Float] = [255,255,255,255]
     var connected: Bool = false
-    
-    var description: String { String(describing: self) }
     
     static func == (lhs: FBGStatus, rhs: FBGStatus) -> Bool {
         return lhs.feet == rhs.feet &&

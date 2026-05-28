@@ -10,11 +10,11 @@ import os
 
 
 enum AutoMode_segment: String, CaseIterable {
-    case Manual, Standing, Lauch, Baffle, Testing
+    case Manual, Standing, Lauch, Stairs, Baffle, Testing
 }
 
 // Base class for status objects to avoid code duplication
-class BaseStatusObject<T: Decodable & Equatable & CustomStringConvertible>: ObservableObject {
+class BaseStatusObject<T: Decodable & Equatable>: ObservableObject {
     @Published var status: T
     private let initialStatus: T
     private let networkManager = NetworkManager.shared
@@ -35,7 +35,7 @@ class BaseStatusObject<T: Decodable & Equatable & CustomStringConvertible>: Obse
                     withAnimation(.easeInOut){
                         
                         if self.status != status {
-                            Logger().debug("Status updated: \(status)")
+                            print("Status updated: \(status)")
                             
                             self.status = status
                         }
@@ -127,7 +127,7 @@ class AutomationStatusObject: BaseStatusObject<AutomationStatus> {
     struct setModeCommand : Encodable {
         var mode : String
     }
-    var autoMode: AutomationStatus.AutoMode_segment = .Manual
+    var autoMode: AutoMode_segment = .Manual
     var autoModeDetail: AutoMode = .Enter
     init() {
         super.init(initialStatus: AutomationStatus(), statusRoute: "/auto_status")
