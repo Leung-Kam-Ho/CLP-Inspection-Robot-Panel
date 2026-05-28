@@ -10,68 +10,45 @@ import os
 
 @main
 struct CLP_Inspection_Robot_PanelApp: App {
-    @State private var isFullScreen = false
-    @StateObject var settings = SettingsHandler()
-    @StateObject var robotStatus = RobotStatusObject()
-    @StateObject var launchPlatformStatus = LaunchPlatformStatusObject()
-    @StateObject var automationStatus = AutomationStatusObject()
-    @StateObject var elCidStatus = ElCidStatusObject()
-    @StateObject var digitalValveStatus = DigitalValveStatusObject()
-    @StateObject var fbgStatus = FBGStatusObject()
+    @StateObject private var settings = SettingsHandler()
+    @StateObject private var robotStatus = RobotStatusObject()
+    @StateObject private var launchPlatformStatus = LaunchPlatformStatusObject()
+    @StateObject private var automationStatus = AutomationStatusObject()
+    @StateObject private var elCidStatus = ElCidStatusObject()
+    @StateObject private var digitalValveStatus = DigitalValveStatusObject()
+    @StateObject private var fbgStatus = FBGStatusObject()
 
-    private let FullMinSize = CGSize(width: 2000, height: 1000)
+    private let fullMinSize = CGSize(width: 2000, height: 1000)
     private let contentMinSize = CGSize(width: 1300, height: 1000)
     private let userViewContentMinSize = CGSize(width: 650, height: 1000)
     private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
     
-    
-    
     var body: some Scene {
         WindowGroup(id: "main") {
-            
-            
             GeometryReader { proxy in
-
-                let isFullScreen = proxy.size.width > FullMinSize.width && proxy.size.height > FullMinSize.height
-                let smallerThenMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
+                let isFullScreen = proxy.size.width > fullMinSize.width && proxy.size.height > fullMinSize.height
+                let smallerThanMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
                 
-                HStack {
-                    if !smallerThenMinSize && !settings.forceUserView{
-                        
-                        if isFullScreen {
-                            HStack{
-                                UserView()
-//                                Spacer()
-                                
-                            }
-                        }else{
-                            ContentView(disable_robot: isFullScreen)
-                        }
-                    }else{
-                        HStack{
-                            UserView()
-//                            Spacer()
-                            
-                        }
-                        
+                Group {
+                    if smallerThanMinSize || settings.forceUserView || isFullScreen {
+                        UserView()
+                    } else {
+                        ContentView(disable_robot: isFullScreen)
                     }
-                    
-                    
-                    
                 }
                 .scrollContentBackground(.hidden)
                 .bold()
                 .preferredColorScheme(.dark)
                 .monospacedDigit()
             }
-            .background(){
-                Button(""){
-                    logger.info("UserView")
+            .background {
+                Button("") {
+                    logger.info("Toggle Force UserView")
                     settings.forceUserView.toggle()
-                }.keyboardShortcut(.return, modifiers: .command)
+                }
+                .keyboardShortcut(.return, modifiers: .command)
             }
             .background(Image("Watermark"))
-
             .onReceive(elCidStatus.timer) { _ in
                 logger.info("elCid Fetching Status")
                 elCidStatus.fetchStatus(ip: settings.ip, port: settings.port)
@@ -106,16 +83,5 @@ struct CLP_Inspection_Robot_PanelApp: App {
             .environmentObject(fbgStatus)
         }
         .defaultSize(contentMinSize)
-        
-//        WindowGroup("User-View", id:"user-view") {
-//            UserView()
-//                .environmentObject(digitalValveStatus)
-//                .environmentObject(robotStatus)
-//                .environmentObject(launchPlatformStatus)
-//                .environmentObject(automationStatus)
-//                .environmentObject(settings)
-//                .font(.title2)
-//                .bold()
-//        }
     }
 }
