@@ -160,7 +160,7 @@ struct UserView: View {
                     LEDControlView()
                         .frame(maxHeight: 400)
                     Spacer()
-                    AutoStageView(totaleStage: 6, currentStage: 1)
+                    AutoStageView()
                 }
                 .frame(maxHeight:.infinity)
                 .padding()

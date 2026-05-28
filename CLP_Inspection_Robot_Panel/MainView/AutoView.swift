@@ -62,13 +62,17 @@ struct AutoMenu<Content: View>: View {
 }
 
 struct AutoStageView: View {
-    var totaleStage : Int = 6
-    var currentStage : Int = 0
+    @EnvironmentObject var autoStatus: AutomationStatusObject
+    let inspectionStages : [AutoMode] = [.Manual,.Enter, .Drop, .Enter_Stairs, .Enter_Generator, .Exit_Generator, .Exit_Stairs, .Elevate, .Exit]
     
     var body: some View {
+        let totaleStage: Int = inspectionStages.count
+        let currentMode: AutoMode = AutoMode(rawValue: autoStatus.status.mode) ?? .Manual
+        let currentStage: Int = inspectionStages.firstIndex(of: currentMode) ?? 0
         VStack{
             ForEach(0..<totaleStage, id: \.self) { index in
-                Image(systemName: index == currentStage ? "\(index+1).circle.fill" : "\(index+1).circle")
+                let content : String = index != 0 ? "\(index)" : "m"
+                Image(systemName: index == currentStage ? "\(content).circle.fill" : "\(content).circle")
                     .foregroundColor(Constants.offWhite)
                     .padding()
                     .font(.title)
