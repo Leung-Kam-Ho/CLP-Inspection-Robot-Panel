@@ -7,26 +7,38 @@ struct LaunchPlatformView: View {
     @EnvironmentObject var elcidStatus: ElCidStatusObject
     @EnvironmentObject var settings: SettingsHandler
     
-    @State var viewModel = ViewModel()
+    @State private var viewModel = ViewModel()
+    @State private var showSlot: Bool
     
-    var enabled = true
-    var compact = false
-    @State var show_slot = true
-    var title = true
+    let enabled: Bool
+    let compact: Bool
+    let title: Bool
     
-    let img_list = ["arrow.left.arrow.right.circle.fill", "lock.open.rotation", "brakesignal.dashed", "lifepreserver.fill"]
+    private let imgList = [
+        "arrow.left.arrow.right.circle.fill",
+        "lock.open.rotation",
+        "brakesignal.dashed",
+        "lifepreserver.fill"
+    ]
+    
+    init(enabled: Bool = true, compact: Bool = false, showSlot: Bool = true, title: Bool = true) {
+        self.enabled = enabled
+        self.compact = compact
+        self._showSlot = State(initialValue: showSlot)
+        self.title = title
+    }
     
     var body: some View {
         HStack {
             if viewModel.show {
-                if !self.enabled {
+                if !enabled {
                     disabledView
                 } else {
                     enabledView
                 }
             }
         }
-        .sensoryFeedback(.impact(weight: .heavy), trigger: viewModel.success) { old, new in
+        .sensoryFeedback(.impact(weight: .heavy), trigger: viewModel.success) { _, new in
             if new {
                 Logger().info("success")
                 viewModel.success = false
@@ -35,45 +47,47 @@ struct LaunchPlatformView: View {
             return false
         }
         .onAppear {
-            self.viewModel.previewLP_angle = Double(launchPlatformStatus.status.angle)
-            self.viewModel.previewLP_angle_lastAngle = self.viewModel.previewLP_angle
-            self.viewModel.show = true
+            viewModel.previewLP_angle = Double(launchPlatformStatus.status.angle)
+            viewModel.previewLP_angle_lastAngle = viewModel.previewLP_angle
+            viewModel.show = true
         }
         .onDisappear {
-            self.viewModel.show = false
+            viewModel.show = false
         }
         .frame(maxHeight: .infinity)
     }
 }
 
-// MARK: - Subviews
+// MARK: - Subviews & Layout Helpers
 extension LaunchPlatformView {
+    
+    private var currentAngle: Double {
+        enabled ? viewModel.previewLP_angle : Double(launchPlatformStatus.status.angle)
+    }
+    
+    private var currentSlot: Int {
+        Int(currentAngle / Constants.SLOT_DISTANCE_DEGREE) + 1
+    }
+    
+    private var fractionalPart: Double {
+        currentAngle.truncatingRemainder(dividingBy: 1.0)
+    }
     
     private var launchPlatformImage: some View {
         Image("LaunchPlatform")
             .resizable()
             .padding()
-//            .tint(.primary)
             .aspectRatio(contentMode: .fit)
             .rotationEffect(.degrees(Double(launchPlatformStatus.status.angle)))
-            
     }
     
     private var slotOrAngleDisplay: some View {
         VStack(alignment: .center) {
-            let fractionalPart: Double = enabled 
-                ? Double(self.viewModel.previewLP_angle - Double(Int(self.viewModel.previewLP_angle))) 
-                : Double(launchPlatformStatus.status.angle - Float(Int(launchPlatformStatus.status.angle)))
-                
-            let slot: Int = enabled 
-                ? Int(self.viewModel.previewLP_angle / Constants.SLOT_DISTANCE_DEGREE) + 1 
-                : Int(launchPlatformStatus.status.angle / Float(Constants.SLOT_DISTANCE_DEGREE)) + 1
-            
-            if show_slot {
+            if showSlot {
                 Text("Slot")
                     .foregroundStyle(Constants.offWhite)
                     .font(enabled && !compact ? .title : .caption)
-                Text(String(format: "%02d", Int(slot)))
+                Text(String(format: "%02d", currentSlot))
                     .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
                     .font(.system(size: enabled && !compact ? 200 : 90))
@@ -82,16 +96,14 @@ extension LaunchPlatformView {
                     .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
                     
-                Text(enabled ? String(format: "%03d", Int(self.viewModel.previewLP_angle)) : String(format: "%03d", Int(launchPlatformStatus.status.angle)))
+                Text(String(format: "%03d", Int(currentAngle)))
                     .font(.system(size: enabled && !compact ? 180 : 70))
                     .tint(Constants.offWhite)
                     .contentTransition(.numericText(countsDown: true))
-                    
                 
                 Text(String(format: "%02d", Int(fractionalPart * 90)))
                     .font(enabled && !compact ? .title : .body)
                     .foregroundStyle(Constants.offWhite)
-                    
             }
         }
     }
@@ -108,17 +120,12 @@ extension LaunchPlatformView {
                         dragOverlayControls(length: length)
                     }
                     .overlay(alignment: .center) {
-                        ZStack {
-        //                    Image(systemName: "circle.fill")
-        //                        .font(.system(size: enabled && !compact ? 400 : 150))
-        //                        .foregroundStyle(.ultraThickMaterial)
-                            
-                            Button(action: {
-                                show_slot.toggle()
-                            }) {
-                                slotOrAngleDisplay
-                            }.buttonStyle(.plain)
+                        Button(action: {
+                            showSlot.toggle()
+                        }) {
+                            slotOrAngleDisplay
                         }
+                        .buttonStyle(.plain)
                     }
                 Spacer()
             }
@@ -139,27 +146,41 @@ extension LaunchPlatformView {
                 .offset(y: length / -2)
                 .foregroundStyle(.blue)
         }
-        .rotationEffect(.degrees(self.viewModel.previewLP_angle))
+        .rotationEffect(.degrees(viewModel.previewLP_angle))
         .padding()
         .gesture(
             DragGesture()
-                .onChanged { v in
-                    var theta = (atan2(v.location.x - length / 2, length / 2 - v.location.y) - atan2(v.startLocation.x - length / 2, length / 2 - v.startLocation.y)) * 180 / .pi
-                    if theta < 0 { theta += 360 }
-                    let result = Double((theta + self.viewModel.previewLP_angle_lastAngle)).truncatingRemainder(dividingBy: 360)
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        if viewModel.locked {
-                            self.viewModel.previewLP_angle = Double(self.viewModel.closestMultipleOf12(for: Int(result))) + self.viewModel.offset
-                        } else {
-                            self.viewModel.previewLP_angle = result + self.viewModel.offset
-                        }
-                        self.viewModel.previewLP_angle = self.viewModel.previewLP_angle.truncatingRemainder(dividingBy: 360)
-                    }
+                .onChanged { value in
+                    handleDragGestureChange(value, length: length)
                 }
                 .onEnded { _ in
-                    self.viewModel.previewLP_angle_lastAngle = self.viewModel.previewLP_angle
+                    viewModel.previewLP_angle_lastAngle = viewModel.previewLP_angle
                 }
         )
+    }
+    
+    private func handleDragGestureChange(_ value: DragGesture.Value, length: CGFloat) {
+        let centerX = length / 2
+        let centerY = length / 2
+        
+        let startAngle = atan2(value.startLocation.x - centerX, centerY - value.startLocation.y)
+        let currentDragAngle = atan2(value.location.x - centerX, centerY - value.location.y)
+        
+        var angleDifference = (currentDragAngle - startAngle) * 180 / .pi
+        if angleDifference < 0 {
+            angleDifference += 360
+        }
+        
+        let result = (angleDifference + viewModel.previewLP_angle_lastAngle).truncatingRemainder(dividingBy: 360)
+        
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if viewModel.locked {
+                viewModel.previewLP_angle = Double(viewModel.closestMultipleOf12(for: Int(result))) + viewModel.offset
+            } else {
+                viewModel.previewLP_angle = result + viewModel.offset
+            }
+            viewModel.previewLP_angle = viewModel.previewLP_angle.truncatingRemainder(dividingBy: 360)
+        }
     }
     
     private var disabledView: some View {
@@ -167,13 +188,12 @@ extension LaunchPlatformView {
             Spacer()
             launchPlatformImage
                 .overlay(alignment: .center) {
-                    ZStack {
-                        Button(action: {
-                            show_slot.toggle()
-                        }) {
-                            slotOrAngleDisplay
-                        }.buttonStyle(.plain)
+                    Button(action: {
+                        showSlot.toggle()
+                    }) {
+                        slotOrAngleDisplay
                     }
+                    .buttonStyle(.plain)
                 }
             Spacer()
             HStack {
@@ -289,18 +309,24 @@ extension LaunchPlatformView {
         .background(RoundedRectangle(cornerRadius: 33).fill(.ultraThinMaterial))
     }
     
+    private func isRelayActive(at index: Int) -> Bool {
+        let relayString = launchPlatformStatus.status.relay
+        guard relayString.indices.contains(relayString.index(relayString.startIndex, offsetBy: index)) else {
+            return false
+        }
+        let charIndex = relayString.index(relayString.startIndex, offsetBy: index)
+        return relayString[charIndex] == "1"
+    }
+    
     private func relayButton(for idx: Int) -> some View {
         Button(action: {
-            LaunchPlatformStatusObject.setRelay(ip: settings.ip, port: settings.port, idx: Int(idx - 1))
+            LaunchPlatformStatusObject.setRelay(ip: settings.ip, port: settings.port, idx: idx - 1)
         }) {
-            let s = launchPlatformStatus.status.relay
-            let index = s.index(s.startIndex, offsetBy: idx - 1)
-            let state = String(launchPlatformStatus.status.relay[index])
-            
-            Image(systemName: img_list[idx - 1])
+            let isActive = isRelayActive(at: idx - 1)
+            Image(systemName: imgList[idx - 1])
                 .padding()
                 .tint(.primary)
-                .background(Circle().fill(state == "1" ? .orange : Constants.notBlack))
+                .background(Circle().fill(isActive ? .orange : Constants.notBlack))
         }
         .keyboardShortcut(KeyEquivalent(Character("\(idx)")), modifiers: [])
     }
@@ -349,7 +375,7 @@ extension LaunchPlatformView {
         }
     }
     
-    func MovePlatform(value: Int = 0) {
+    func movePlatform(value: Int = 0) {
         // negative is backward, positive is forward, 0 is stop
     }
 }

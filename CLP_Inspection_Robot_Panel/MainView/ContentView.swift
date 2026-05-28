@@ -88,7 +88,7 @@ extension ContentView {
     }
     
     private func launchPlatformView(compact: Bool) -> some View {
-        LaunchPlatformView(compact: compact, show_slot: false)
+        LaunchPlatformView(compact: compact, showSlot: false)
             .padding()
             .background(RoundedRectangle(cornerRadius: 49.0).fill(.ultraThinMaterial).stroke(.white))
             .padding()
