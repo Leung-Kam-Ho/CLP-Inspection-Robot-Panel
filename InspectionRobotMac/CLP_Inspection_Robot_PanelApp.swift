@@ -49,29 +49,13 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 .keyboardShortcut(.return, modifiers: .command)
             }
             .background(Image("Watermark"))
-            .onReceive(elCidStatus.timer) { _ in
-                logger.info("elCid Fetching Status")
-                elCidStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            }
-            .onReceive(launchPlatformStatus.timer) { _ in
-                logger.info("launchplatform Fetching Status")
-                launchPlatformStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            }
-            .onReceive(automationStatus.timer) { _ in
-                logger.info("Auto Fetching Status")
-                automationStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            }
-            .onReceive(robotStatus.timer) { _ in
-                logger.info("robot Fetching Status")
-                robotStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            }
-            .onReceive(digitalValveStatus.timer) { _ in
-                logger.info("digital valve Fetching Status")
-                digitalValveStatus.fetchStatus(ip: settings.ip, port: settings.port)
-            }
-            .onReceive(fbgStatus.timer) { _ in
-                logger.info("FBG Fetching Status")
-                fbgStatus.fetchStatus(ip: settings.ip, port: settings.port)
+            .onAppear {
+                elCidStatus.startPolling(settings: settings)
+                launchPlatformStatus.startPolling(settings: settings)
+                automationStatus.startPolling(settings: settings)
+                robotStatus.startPolling(settings: settings)
+                digitalValveStatus.startPolling(settings: settings)
+                fbgStatus.startPolling(settings: settings)
             }
             .font(.title2)
             .environmentObject(settings)

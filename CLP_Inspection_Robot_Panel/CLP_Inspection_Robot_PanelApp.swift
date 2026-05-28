@@ -26,38 +26,14 @@ struct CLP_Inspection_Robot_PanelApp: App {
 //                AutoView()
             }
             .background(Image("Watermark"))
-            .onReceive(elCidStatus.timer, perform: { _ in
-                Logger().info("elCid Fetching Status")
-                elCidStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
-            .onReceive(launchPlatformStatus.timer, perform: { _ in
-                Logger().info("launchplatform Fetching Status")
-                    
-                    launchPlatformStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-                })
-            .onReceive(automationStatus.timer, perform: {_ in
-                Logger().info("Auto Fetching Status")
-                
-                    automationStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
-            .onReceive(robotStatus.timer, perform: {_ in
-                Logger().info("robot Fetching Status")
-                    robotStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
-            .onReceive(digitalValveStatus.timer, perform: {_ in
-                Logger().info("digital valve Fetching Status")
-                digitalValveStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
-            .onReceive(fbgStatus.timer, perform: {_ in
-                Logger().info("FBG Fetching Status")
-                fbgStatus.fetchStatus(ip: settings.ip, port: settings.port)
-                
-            })
+            .onAppear {
+                elCidStatus.startPolling(settings: settings)
+                launchPlatformStatus.startPolling(settings: settings)
+                automationStatus.startPolling(settings: settings)
+                robotStatus.startPolling(settings: settings)
+                digitalValveStatus.startPolling(settings: settings)
+                fbgStatus.startPolling(settings: settings)
+            }
             .font(.title2)
 //            .environmentObject(station)
             .environmentObject(settings)

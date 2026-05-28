@@ -7,11 +7,25 @@
 import Foundation
 import SwiftUI
 import os
+import Combine
 
+// Protocol to standardise connection state checking
+protocol ConnectableStatus {
+    var connected: Bool { get set }
+}
+
+extension RobotStatus: ConnectableStatus {}
+extension DigitalValve_Status: ConnectableStatus {}
+extension LaunchPlatformStatus: ConnectableStatus {}
+extension AutomationStatus: ConnectableStatus {}
+extension ElCidstatus: ConnectableStatus {}
+extension FBGStatus: ConnectableStatus {}
 
 enum AutoMode_segment: String, CaseIterable {
     case Manual, Standing, Lauch, Stairs, Baffle, Testing
 }
+
+private let baseLogger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "NetworkCommand")
 
 // Base class for status objects to avoid code duplication
 class BaseStatusObject<T: Decodable & Equatable>: ObservableObject {
@@ -19,36 +33,63 @@ class BaseStatusObject<T: Decodable & Equatable>: ObservableObject {
     private let initialStatus: T
     private let networkManager = NetworkManager.shared
     private let statusRoute: String
-    @Published var timer = Timer.publish(every: Constants.SLOW_RATE, on: .main, in: .common).autoconnect()
+    private let logger: Logger
+    
+    private var timerSubscription: AnyCancellable?
     
     init(initialStatus: T, statusRoute: String) {
         self.initialStatus = initialStatus
         self.status = initialStatus
         self.statusRoute = statusRoute
+        self.logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: String(describing: T.self))
+    }
+    
+    func startPolling(settings: SettingsHandler, interval: TimeInterval = Constants.MEDIUM_RATE) {
+        stopPolling()
+        
+        // Fetch once immediately when polling starts
+        fetchStatus(ip: settings.ip, port: settings.port)
+        
+        timerSubscription = Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self, weak settings] _ in
+                guard let self = self, let settings = settings else { return }
+                self.fetchStatus(ip: settings.ip, port: settings.port)
+            }
+    }
+    
+    func stopPolling() {
+        timerSubscription?.cancel()
+        timerSubscription = nil
     }
     
     func fetchStatus(ip: String, port: Int) {
-        NetworkManager.getRequest(ip: ip, port: port, route: statusRoute) { (result: Result<T, Error>) in
+        NetworkManager.getRequest(ip: ip, port: port, route: statusRoute) { [weak self] (result: Result<T, Error>) in
+            guard let self = self else { return }
             switch result {
-            case .success(let status):
+            case .success(let newStatus):
                 DispatchQueue.main.async {
-                    withAnimation(.easeInOut){
-                        
-                        if self.status != status {
-                            print("Status updated: \(status)")
-                            
-                            self.status = status
+                    if self.status != newStatus {
+                        self.logger.info("Status updated for \(self.statusRoute)")
+                        withAnimation(.easeInOut) {
+                            self.status = newStatus
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Handle error on the main thread
-                    Logger().debug("Failed to fetch status: \(error.localizedDescription)")
-                
-                    self.status = self.initialStatus // Reset to initial status on error
+                    self.logger.error("Failed to fetch \(self.statusRoute): \(error.localizedDescription)")
+                    
+                    // Retain last-known data, but set connected to false to prevent UI flickering
+                    if var connectable = self.status as? ConnectableStatus {
+                        if connectable.connected {
+                            self.objectWillChange.send()
+                            connectable.connected = false
+                        }
+                    } else {
+                        self.status = self.initialStatus
+                    }
                 }
-                print(error)
             }
         }
     }
@@ -57,9 +98,9 @@ class BaseStatusObject<T: Decodable & Equatable>: ObservableObject {
         NetworkManager.postRequest(ip: ip, port: port, route: route, value: data) { success in
             DispatchQueue.main.async {
                 if success {
-                    Logger().debug("POST request succeeded")
+                    baseLogger.info("POST request succeeded for \(route)")
                 } else {
-                    Logger().debug("POST request failed")
+                    baseLogger.error("POST request failed for \(route)")
                 }
             }
         }
