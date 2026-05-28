@@ -8,9 +8,8 @@
 import SwiftUI
 import WebKit
 import os
-import SwiftUI
 
-
+private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "WebView")
 
 struct Camera_WebView : View {
     @EnvironmentObject var settings : SettingsHandler
@@ -67,15 +66,15 @@ struct WebView: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-            print("WebView started loading")
+            logger.info("WebView started loading")
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            print("WebView finished loading")
+            logger.info("WebView finished loading")
         }
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            print("WebView failed with error: \(error)")
+            logger.error("WebView failed with error: \(error.localizedDescription)")
             self.parent.loadURL()
         }
     }
