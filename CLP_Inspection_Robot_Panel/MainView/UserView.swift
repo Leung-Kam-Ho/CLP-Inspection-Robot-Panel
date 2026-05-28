@@ -22,7 +22,10 @@ struct UserView: View {
     }
     
     private var isSlotAligned: Bool {
-        currentSlot == selectedSlot
+        // current slot = selectedSlot and the angle of launchplatform is +- 1 of the setpoint
+        let launchPlatformAngle = launchPlatformStatus.status.angle.truncatingRemainder(dividingBy: 360)
+        let launchPlatformSetpoint = launchPlatformStatus.status.setpoint.truncatingRemainder(dividingBy: 360)
+        return (currentSlot == selectedSlot) && (abs(launchPlatformAngle - launchPlatformSetpoint) <= 1)
     }
     
     private var isAutomationInProgress: Bool {
@@ -52,7 +55,7 @@ struct UserView: View {
                                 EL_CID_Progress: 0.0,
                                 Knocker_result: 0.0
                             )
-                            InspectionSlotCardView(slot: slot, current_slot: index == currentSlot)
+                            InspectionSlotCardView(slot: slot, current_slot: index == currentSlot && isSlotAligned)
                                 .tag(index)
                         }
                     }
