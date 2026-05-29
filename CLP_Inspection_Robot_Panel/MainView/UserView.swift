@@ -226,7 +226,7 @@ struct UserView: View {
                     }
                 }
             }
-            .disabled(!isSlotAligned)
+            .disabled(!isSlotAligned && !isAutomationInProgress)
         }
         .font(.title2)
         .frame(maxWidth: .infinity)

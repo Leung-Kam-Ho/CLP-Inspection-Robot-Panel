@@ -4,6 +4,7 @@ import os
 struct LaunchPlatformView: View {
     @EnvironmentObject var digitalValveStatus: DigitalValveStatusObject
     @EnvironmentObject var launchPlatformStatus: LaunchPlatformStatusObject
+    @EnvironmentObject var robotStatus: RobotStatusObject
     @EnvironmentObject var elcidStatus: ElCidStatusObject
     @EnvironmentObject var settings: SettingsHandler
     
@@ -66,7 +67,7 @@ extension LaunchPlatformView {
     }
     
     private var currentSlot: Int {
-        Int(currentAngle / Constants.SLOT_DISTANCE_DEGREE) + 1
+        Int(Double(robotStatus.status.roll_angle) / Constants.SLOT_DISTANCE_DEGREE) + 1
     }
     
     private var fractionalPart: Double {
