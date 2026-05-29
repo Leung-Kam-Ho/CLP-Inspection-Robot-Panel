@@ -15,6 +15,12 @@ struct UserView: View {
     
     @State private var selectedSlot: Int = 0
     
+    let showRobot : Bool
+    
+    init(showRobot: Bool = true){
+        self.showRobot = showRobot
+    }
+    
     // MARK: - Computed Properties
     
     private var currentSlot: Int {
@@ -43,8 +49,10 @@ struct UserView: View {
                     launchPlatformButton
                         .padding()
                     
-                    robotButton
-                        .padding()
+                    if showRobot{
+                        robotButton
+                            .padding()
+                    }
                     
                     // Tab view for inspection progress.
                     // Total 30 slots; each slot has its own progress view and can be selected to show more details.

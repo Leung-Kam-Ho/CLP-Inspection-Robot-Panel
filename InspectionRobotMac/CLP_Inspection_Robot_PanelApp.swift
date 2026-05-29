@@ -18,7 +18,7 @@ struct CLP_Inspection_Robot_PanelApp: App {
     @StateObject private var digitalValveStatus = DigitalValveStatusObject()
     @StateObject private var fbgStatus = FBGStatusObject()
 
-    private let fullMinSize = CGSize(width: 2000, height: 1000)
+    private let fullMinSize = CGSize(width: 2000, height: 1300)
     private let contentMinSize = CGSize(width: 1300, height: 1000)
     private let userViewContentMinSize = CGSize(width: 650, height: 1000)
     private let logger = Logger(subsystem: "CLP_Inspection_Robot_Panel", category: "App")
@@ -26,12 +26,14 @@ struct CLP_Inspection_Robot_PanelApp: App {
     var body: some Scene {
         WindowGroup(id: "main") {
             GeometryReader { proxy in
-                let isFullScreen = proxy.size.width > fullMinSize.width && proxy.size.height > fullMinSize.height
+                let enoughWidth = proxy.size.width > fullMinSize.width
+                let enoughHeight = proxy.size.height > fullMinSize.height
+                let isFullScreen = enoughWidth && enoughHeight
                 let smallerThanMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
                 
                 Group {
-                    if smallerThanMinSize || settings.forceUserView || isFullScreen {
-                        UserView()
+                    if smallerThanMinSize || settings.forceUserView || enoughWidth || enoughHeight{
+                        UserView(showRobot: enoughHeight)
                     } else {
                         ContentView(disable_robot: isFullScreen)
                     }
@@ -66,6 +68,6 @@ struct CLP_Inspection_Robot_PanelApp: App {
             .environmentObject(digitalValveStatus)
             .environmentObject(fbgStatus)
         }
-        .defaultSize(contentMinSize)
+//        .defaultSize(contentMinSize)
     }
 }
