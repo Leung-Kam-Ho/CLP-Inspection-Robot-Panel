@@ -29,10 +29,10 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 let enoughWidth = proxy.size.width > fullMinSize.width
                 let enoughHeight = proxy.size.height > fullMinSize.height
                 let isFullScreen = enoughWidth && enoughHeight
-                let smallerThanMinSize = proxy.size.width < contentMinSize.width || proxy.size.height < contentMinSize.height
+                let reachMinHeight = proxy.size.height > userViewContentMinSize.height
                 
                 Group {
-                    if smallerThanMinSize || settings.forceUserView || enoughWidth || enoughHeight{
+                    if reachMinHeight{
                         UserView(showRobot: enoughHeight)
                     } else {
                         ContentView(disable_robot: isFullScreen)
