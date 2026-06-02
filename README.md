@@ -5,12 +5,12 @@ The CLP Inspection Robot Panel is a software application designed to control and
 
 | ![CLP Inspection Robot Panel + Rviz](media/Overview_FullSetup.png) |
 |:--: |
-| *CLP Inspection Robot Panel integrated with Rviz for enhanced visualization and control.* |
+| **CLP Inspection Robot Panel integrated with Rviz for enhanced visualization and control.** |
 
 
 | ![CLP Inspection Robot Panel](media/Overview.png) | 
 |:--: |
-| *CLP Inspection Robot Panel showcasing real-time monitoring and control features.* |
+| **CLP Inspection Robot Panel showcasing real-time monitoring and control features.** |
 
 ## Features
 
