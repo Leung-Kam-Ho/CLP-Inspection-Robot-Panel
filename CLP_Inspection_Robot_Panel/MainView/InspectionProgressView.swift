@@ -104,9 +104,6 @@ struct InspectionSlotCardView: View {
     
     var body: some View {
         VStack{
-            
-                
-                
                 TestProgressBar(label : "EL-CID", value : slot.EL_CID_Progress, color: .green)
                 //            TestProgressBar(label : "HLD", value : slot.Knocker_result, color: .blue)
                 InspectionProgressView()
