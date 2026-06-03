@@ -12,6 +12,7 @@ struct UserView: View {
     @EnvironmentObject private var launchPlatformStatus: LaunchPlatformStatusObject
     @EnvironmentObject private var autoStatus: AutomationStatusObject
     @EnvironmentObject private var settings: SettingsHandler
+    @EnvironmentObject private var progressStatus: ProgressStatusObject
     
     @State private var selectedSlot: Int = 0
     
@@ -60,7 +61,7 @@ struct UserView: View {
                         ForEach(0..<30) { index in
                             let slot = InspectionProgressView.Inspection_Slot_Progress(
                                 slot_id: index + 1,
-                                EL_CID_Progress: 0.0,
+                                EL_CID_Progress: progressStatus.status.elcid_progress[index],
                                 Knocker_result: 0.0
                             )
                             InspectionSlotCardView(slot: slot, current_slot: index == currentSlot && isSlotAligned)

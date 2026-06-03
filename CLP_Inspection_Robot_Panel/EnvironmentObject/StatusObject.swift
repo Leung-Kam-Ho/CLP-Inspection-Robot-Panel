@@ -20,6 +20,7 @@ extension LaunchPlatformStatus: ConnectableStatus {}
 extension AutomationStatus: ConnectableStatus {}
 extension ElCidstatus: ConnectableStatus {}
 extension FBGStatus: ConnectableStatus {}
+extension ProgressStatus: ConnectableStatus {}
 
 enum AutoMode_segment: String, CaseIterable {
     case Manual, Standing, Lauch, Stairs, Baffle, Testing

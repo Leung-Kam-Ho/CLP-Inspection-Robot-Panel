@@ -121,9 +121,10 @@ class FBGStatus: Codable, ObservableObject, Equatable {
 
 // progress Status
 class ProgressStatus: Codable, ObservableObject, Equatable {
-    var hld_progress: [Float] = [0.0, 0.0, 0.0, 0.0]
+    var hld_progress: [Float] = [0.0, 0.0]
     // 30 item in elcid_progress, each item for one slot
     var elcid_progress: [Float] = Array(repeating: 0.0, count: 30)
+    var connected: Bool = false
 
     static func == (lhs: ProgressStatus, rhs: ProgressStatus) -> Bool {
         return lhs.hld_progress == rhs.hld_progress &&

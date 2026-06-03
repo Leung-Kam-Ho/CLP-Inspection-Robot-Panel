@@ -135,26 +135,41 @@ extension InspectionSlotCardView{
         var value : Float?
         var color : Color
         var body: some View {
-            
             GroupBox(label){
-//                Text(label)
-//                    .foregroundStyle(Constants.notBlack)
-//                    .frame(width: 100)
-//                    .padding()
-//                    .background(RoundedRectangle(cornerRadius: 17.0).fill(Constants.offWhite))
-                
-                Text(String(format: "%.1f",(value ?? 0.0) * 100) + "%" )
-                    .font(.title2)
-                    .lineLimit(1)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical)
-                    .contentTransition(.numericText(countsDown: true))
-                    .background(RoundedRectangle(cornerRadius: 17.0).fill(value != 1.0 ? .black : color))
-                    
-            }.clipShape(.rect(cornerRadius: 33))
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 17)
+                            .fill(.black)
+                            .frame(height: 44)
+                        RoundedRectangle(cornerRadius: 17)
+                            .fill(fillColor)
+                            .frame(width: max(geo.size.width * CGFloat(value ?? 0), 0), height: 44)
+                            .animation(.easeInOut(duration: 0.5), value: value)
+                        Text(String(format: "%.1f", (value ?? 0.0) * 100) + "%")
+                            .font(.title2.weight(.bold))
+                            .foregroundStyle(textColor)
+                            .frame(maxWidth: .infinity)
+                            .contentTransition(.numericText(countsDown: true))
+                    }
+                }
+                .frame(height: 44)
+            }
+            .clipShape(.rect(cornerRadius: 33))
         }
-        
+
+        private var fillColor: Color {
+            // guard let v = value else { return .gray }
+            // if v >= 1.0 { return color }
+            // if v >= 0.7 { return .yellow }
+            // if v >= 0.4 { return .orange }
+            return color
+        }
+
+        private var textColor: Color {
+            // guard let v = value else { return .white }
+            // return v >= 0.7 ? .black : .white
+            return .white
+        }
     }
 }
 
