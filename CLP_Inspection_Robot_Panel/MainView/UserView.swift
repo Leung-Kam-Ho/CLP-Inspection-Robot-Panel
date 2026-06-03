@@ -201,7 +201,7 @@ struct UserView: View {
                 }
             }) {
                 Label(
-                    isAutomationInProgress ? "Emergancy Stop" : "\(autoStatus.autoModeDetail.rawValue)",
+                    isAutomationInProgress ? "Emergency Stop" : "\(autoStatus.autoModeDetail.rawValue)",
                     systemImage: isAutomationInProgress ? "stop.fill" : "play.fill"
                 )
                 .padding(10)
