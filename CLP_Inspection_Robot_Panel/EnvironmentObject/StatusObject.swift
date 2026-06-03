@@ -235,3 +235,11 @@ class FBGStatusObject: BaseStatusObject<FBGStatus> {
     }
 
 }
+
+
+// progress status object
+class ProgressStatusObject: BaseStatusObject<ProgressStatus> {
+    init() {
+        super.init(initialStatus: ProgressStatus(), statusRoute: "/progress_status")
+    }
+}

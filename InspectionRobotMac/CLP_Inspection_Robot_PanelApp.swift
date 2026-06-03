@@ -17,6 +17,7 @@ struct CLP_Inspection_Robot_PanelApp: App {
     @StateObject private var elCidStatus = ElCidStatusObject()
     @StateObject private var digitalValveStatus = DigitalValveStatusObject()
     @StateObject private var fbgStatus = FBGStatusObject()
+    @StateObject private var progressStatus = ProgressStatusObject()
 
     private let fullMinSize = CGSize(width: 2000, height: 1300)
     private let contentMinSize = CGSize(width: 1300, height: 1000)
@@ -57,6 +58,7 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 automationStatus.startPolling(settings: settings)
                 robotStatus.startPolling(settings: settings)
                 digitalValveStatus.startPolling(settings: settings)
+                progressStatus.startPolling(settings: settings)
 //                fbgStatus.startPolling(settings: settings)
             }
             .font(.title2)
@@ -67,6 +69,7 @@ struct CLP_Inspection_Robot_PanelApp: App {
             .environmentObject(elCidStatus)
             .environmentObject(digitalValveStatus)
             .environmentObject(fbgStatus)
+            .environmentObject(progressStatus)
         }
 //        .defaultSize(contentMinSize)
     }
