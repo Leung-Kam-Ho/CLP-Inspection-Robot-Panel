@@ -3,7 +3,7 @@
 The CLP Inspection Robot MMI is a software application designed to control and monitor inspection robots used in the CLP (China Light & Power). This repository contains all the necessary code and documentation to set up and use the panel.
 
 
-| ![CLP Inspection Robot MMI + Rviz](media/Overview_Rviz.png) |
+| ![CLP Inspection Robot MMI + Rviz](media/Overview_Rviz2.png) |
 |:--: |
 | **CLP Inspection Robot MMI integrated with Rviz for enhanced visualization and control.** |
 
