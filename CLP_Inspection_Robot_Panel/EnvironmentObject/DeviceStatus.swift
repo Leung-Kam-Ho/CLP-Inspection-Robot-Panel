@@ -128,6 +128,7 @@ class ProgressStatus: Codable, ObservableObject, Equatable {
 
     static func == (lhs: ProgressStatus, rhs: ProgressStatus) -> Bool {
         return lhs.hld_progress == rhs.hld_progress &&
-            lhs.elcid_progress == rhs.elcid_progress
+            lhs.elcid_progress == rhs.elcid_progress &&
+        lhs.connected == rhs.connected
     }
 }

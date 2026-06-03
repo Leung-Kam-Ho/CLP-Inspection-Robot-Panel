@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import os
 
 struct UserView: View {
     @EnvironmentObject private var robotStatus: RobotStatusObject
@@ -61,7 +62,7 @@ struct UserView: View {
                         ForEach(0..<30) { index in
                             let slot = InspectionProgressView.Inspection_Slot_Progress(
                                 slot_id: index + 1,
-                                EL_CID_Progress: progressStatus.status.elcid_progress[index],
+                                EL_CID_Progress: index < progressStatus.status.elcid_progress.count ? progressStatus.status.elcid_progress[index] : 0,
                                 Knocker_result: 0.0
                             )
                             InspectionSlotCardView(slot: slot, current_slot: index == currentSlot && isSlotAligned)

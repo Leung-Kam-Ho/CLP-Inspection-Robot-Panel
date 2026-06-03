@@ -59,7 +59,6 @@ struct CLP_Inspection_Robot_PanelApp: App {
                 robotStatus.startPolling(settings: settings)
                 digitalValveStatus.startPolling(settings: settings)
                 progressStatus.startPolling(settings: settings)
-//                fbgStatus.startPolling(settings: settings)
             }
             .font(.title2)
             .environmentObject(settings)
