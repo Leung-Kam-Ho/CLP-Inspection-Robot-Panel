@@ -25,14 +25,14 @@ struct UserView: View {
     // MARK: - Computed Properties
     
     private var currentSlot: Int {
-        Int(launchPlatformStatus.status.angle / Float(Constants.SLOT_DISTANCE_DEGREE))
+        Int(Float(robotStatus.status.roll_angle) / Float(Constants.SLOT_DISTANCE_DEGREE))
     }
     
     private var isSlotAligned: Bool {
         // current slot = selectedSlot and the angle of launchplatform is +- 1 of the setpoint
         let launchPlatformAngle = launchPlatformStatus.status.angle.truncatingRemainder(dividingBy: 360)
         let launchPlatformSetpoint = launchPlatformStatus.status.setpoint.truncatingRemainder(dividingBy: 360)
-        return (currentSlot == selectedSlot) && (abs(launchPlatformAngle - launchPlatformSetpoint) <= 1)
+        return (currentSlot == selectedSlot) && (abs(launchPlatformAngle - launchPlatformSetpoint) <= 0.5)
     }
     
     private var isAutomationInProgress: Bool {

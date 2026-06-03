@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		23405EA12C42FC9B00A7281D /* CLP_Inspection_Robot_Panel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CLP_Inspection_Robot_Panel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		23DC2C992CCF42B700EB2CFF /* InspectionRobotMa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InspectionRobotMa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		23DC2C992CCF42B700EB2CFF /* InspectionRobotMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InspectionRobotMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B451D62EB4A5DB00784272 /* CLP_Robot_Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = CLP_Robot_Icon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,14 +59,14 @@
 				SubView/VerticalSlider.swift,
 				SubView/WebView.swift,
 			);
-			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMa */;
+			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */;
 		};
 		C06667372FBB19E40017A9BA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMa */;
+			target = 23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -107,7 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				23405EA12C42FC9B00A7281D /* CLP_Inspection_Robot_Panel.app */,
-				23DC2C992CCF42B700EB2CFF /* InspectionRobotMa.app */,
+				23DC2C992CCF42B700EB2CFF /* InspectionRobotMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,9 +138,9 @@
 			productReference = 23405EA12C42FC9B00A7281D /* CLP_Inspection_Robot_Panel.app */;
 			productType = "com.apple.product-type.application";
 		};
-		23DC2C982CCF42B700EB2CFF /* InspectionRobotMa */ = {
+		23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23DC2CA52CCF42B900EB2CFF /* Build configuration list for PBXNativeTarget "InspectionRobotMa" */;
+			buildConfigurationList = 23DC2CA52CCF42B900EB2CFF /* Build configuration list for PBXNativeTarget "InspectionRobotMac" */;
 			buildPhases = (
 				23DC2C952CCF42B700EB2CFF /* Sources */,
 				23DC2C962CCF42B700EB2CFF /* Frameworks */,
@@ -153,11 +153,11 @@
 			fileSystemSynchronizedGroups = (
 				23DC2C9A2CCF42B700EB2CFF /* InspectionRobotMac */,
 			);
-			name = InspectionRobotMa;
+			name = InspectionRobotMac;
 			packageProductDependencies = (
 			);
 			productName = InspectionRobotMac;
-			productReference = 23DC2C992CCF42B700EB2CFF /* InspectionRobotMa.app */;
+			productReference = 23DC2C992CCF42B700EB2CFF /* InspectionRobotMac.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -192,7 +192,7 @@
 			projectRoot = "";
 			targets = (
 				23405EA02C42FC9B00A7281D /* CLP_Inspection_Robot_Panel */,
-				23DC2C982CCF42B700EB2CFF /* InspectionRobotMa */,
+				23DC2C982CCF42B700EB2CFF /* InspectionRobotMac */,
 			);
 		};
 /* End PBXProject section */
@@ -546,7 +546,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23DC2CA52CCF42B900EB2CFF /* Build configuration list for PBXNativeTarget "InspectionRobotMa" */ = {
+		23DC2CA52CCF42B900EB2CFF /* Build configuration list for PBXNativeTarget "InspectionRobotMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23DC2CA62CCF42B900EB2CFF /* Debug */,
